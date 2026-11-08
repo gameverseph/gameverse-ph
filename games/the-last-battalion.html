@@ -1,10 +1,14 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#090914"><title>The Last Battalion — Peejay the Sky Piercer</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#090d14">
+<title>The Last Battalion 3D — Peejay the Sky Piercer | GAMEVERSE PH</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#090914;color:#fff;font-family:Arial,sans-serif}header{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:#141426;border-bottom:1px solid #34344c;gap:10px}a,.btn{color:#06130c;background:#00ff88;border:0;border-radius:9px;padding:10px 14px;font-weight:bold;text-decoration:none;cursor:pointer}.brand{font-weight:900;color:#00ff88}.wrap{max-width:850px;margin:auto;padding:18px}.intro,.panel{background:#17172a;border:1px solid #33334c;border-radius:14px;padding:18px;margin-bottom:14px}.intro h1{font-size:clamp(24px,6vw,38px);margin:6px 0;color:#00ff88}.muted{color:#bbb;line-height:1.5}.hud{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:10px 0}.stat{background:#202039;padding:9px 12px;border-radius:9px}.arena{height:340px;position:relative;overflow:hidden;border:2px solid #424260;border-radius:14px;background:radial-gradient(ellipse at 50% 110%,#29434a,#111629 65%,#080b17)}.skyline{position:absolute;bottom:0;left:0;right:0;height:90px;background:linear-gradient(90deg,#131526 0 8%,transparent 8% 11%,#191b30 11% 22%,transparent 22% 26%,#16192b 26% 43%,transparent 43% 47%,#191b30 47% 63%,transparent 63% 68%,#17192c 68% 85%,transparent 85%);opacity:.9}.hero,.enemy{position:absolute;bottom:55px;font-size:42px;filter:drop-shadow(0 0 10px #00ff88)}.hero{left:18%;transition:left .12s}.enemy{right:18%;filter:drop-shadow(0 0 10px #ff4949)}.beam{position:absolute;left:28%;bottom:78px;width:0;height:7px;background:#ffe36b;box-shadow:0 0 16px #ffe36b;border-radius:8px;transition:width .12s}.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.controls button{padding:15px 8px;font-size:17px}.controls .attack{background:#ffd65b}.message{min-height:42px;color:#ffd98a;line-height:1.4;padding-top:8px}.bar{height:10px;background:#333;border-radius:20px;overflow:hidden;min-width:100px}.bar span{display:block;height:100%;background:#00ff88;width:100%}.hidden{display:none!important}.small{font-size:12px;color:#aaa}
-</style><script>document.documentElement.classList.add("gv-auth-check");</script>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#080d14;color:#f4f6fa;font:15px system-ui,Arial;overflow-x:hidden}header{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#111a26;border-bottom:1px solid #354455;gap:10px;position:relative;z-index:5}header a,.btn{background:#d6ad67;color:#17120a;border:0;border-radius:9px;padding:10px 13px;font-weight:850;text-decoration:none;cursor:pointer}header b{color:#e9c47e;letter-spacing:.6px}.wrap{max-width:1100px;margin:auto;padding:12px}.intro{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:linear-gradient(120deg,#192838,#111722);border:1px solid #3a4b5c;border-radius:14px;padding:15px;margin-bottom:10px}.intro h1{font-size:clamp(23px,5vw,36px);margin:4px 0;color:#f0d39b}.muted,.small{color:#aeb9c5;line-height:1.5}.small{font-size:12px}.hud{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}.stat{background:#172431;border:1px solid #3a4b5c;border-radius:8px;padding:8px 11px;font-size:13px;font-weight:750}.stat b{color:#f1d39b}.bar{height:9px;background:#293541;border-radius:10px;overflow:hidden;width:110px;display:inline-block;vertical-align:middle}.bar span{height:100%;display:block;background:linear-gradient(90deg,#4acb83,#d9df75);width:100%}#viewbox{height:min(65vh,610px);min-height:340px;position:relative;border:1px solid #536574;border-radius:14px;overflow:hidden;background:#182431;touch-action:none}#view{display:block;width:100%;height:100%;touch-action:none}#overlay{position:absolute;inset:0;pointer-events:none;display:flex;align-items:flex-start;justify-content:center;padding:14px;text-align:center}.toast{background:#101923d9;border:1px solid #66798a;border-radius:10px;padding:9px 13px;color:#f6dfae;max-width:min(90%,560px);font-size:13px}.bottom-ui{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin-top:10px}.joystick{width:132px;height:132px;border-radius:50%;border:2px solid #8b9baa88;background:#162433aa;position:relative;touch-action:none;user-select:none}.stick{width:54px;height:54px;border-radius:50%;background:#d6ad67;border:3px solid #fff4d3;position:absolute;left:37px;top:37px;box-shadow:0 3px 15px #0009}.actions{display:grid;grid-template-columns:repeat(2,minmax(86px,1fr));gap:8px}.actions button,.mission-actions button{min-height:48px;border:1px solid #617385;border-radius:10px;background:#243546;color:#fff;font-weight:800;padding:9px}.actions .attack{background:#a94b3d;border-color:#df897b}.actions .dodge{background:#376d8b}.actions .jump{background:#5b598e}.actions button:active,.mission-actions button:active{transform:scale(.97)}.mission-panel{background:#121c27;border:1px solid #35495b;border-radius:13px;padding:14px;margin-top:12px}.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;margin-top:10px}.mission-tile{background:#1b2a38;border:1px solid #3b5062;border-radius:10px;padding:10px;text-align:left;color:#eef3f7}.mission-tile small{display:block;color:#aab7c4;margin-top:5px}.mission-tile:disabled{opacity:.45}.mission-tile.current{border-color:#e4bd72;box-shadow:inset 0 0 0 1px #e4bd72}.mission-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.hidden{display:none!important}#result{position:absolute;inset:0;background:#070c13eF;z-index:4;display:flex;align-items:center;justify-content:center;padding:18px}.resultbox{width:min(100%,460px);background:#172534;border:1px solid #64788b;border-radius:16px;padding:22px;text-align:center;box-shadow:0 20px 70px #000b}.resultbox h2{color:#f0d39b;font-size:28px;margin:4px}.resultbox p{color:#c2ccd5;line-height:1.5}.resultbox .btn{margin:5px}.note{font-size:12px;color:#8f9eab;line-height:1.5;margin:12px 2px}@media(min-width:760px){.bottom-ui{grid-template-columns:160px 1fr}.actions{grid-template-columns:repeat(4,minmax(100px,1fr))}.joystick{width:145px;height:145px}.stick{left:43px;top:43px}}@media(max-width:430px){#viewbox{min-height:320px;height:53vh}.bottom-ui{grid-template-columns:112px 1fr;gap:8px}.joystick{width:108px;height:108px}.stick{width:46px;height:46px;left:29px;top:29px}.actions{grid-template-columns:repeat(2,minmax(70px,1fr));gap:6px}.actions button{font-size:12px;min-height:45px;padding:7px 4px}.stat{font-size:11px;padding:7px 8px}}
+</style>
+<script>document.documentElement.classList.add("gv-auth-check");</script>
 <style>html.gv-auth-check body{visibility:hidden!important}</style>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -13,27 +17,149 @@ const firebaseConfig={apiKey:"AIzaSyCeMwYBG6AVch8CXr-Y4ngcp9cmWtqsruU",authDomai
 const auth=getAuth(initializeApp(firebaseConfig));
 onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remove("gv-auth-check")}else{location.replace("../?login=required")}});
 </script>
-</head><body>
-<header><a href="../index.html">← GAMEVERSE</a><div class="brand">THE LAST BATTALION</div><span class="small">MISSION 01</span></header>
+</head>
+<body>
+<header><a href="../index.html">← GAMEVERSE</a><b>THE LAST BATTALION · 3D</b><span class="small">PEEJAY KUROGANE</span></header>
 <main class="wrap">
-<section class="intro"><div class="small">2147 • PARANAQUE SECTOR</div><h1>PEEJAY: THE SKY PIERCER</h1><p class="muted">Bumagsak ang Sky Wall. Dumating ang Higop drones upang nakawin ang hangin ng lungsod. Ikaw si Peejay Kurogane — ang Payat na Haligi. Iligtas ang sektor!</p><button class="btn" id="start">▶ SIMULAN ANG MISYON</button></section>
-<section id="game" class="panel hidden">
-<div class="hud"><div class="stat">❤️ Buhay: <b id="hp">3</b></div><div class="stat">⚡ Enerhiya: <b id="energy">0</b></div><div class="stat">🎯 Talo: <b id="kills">0</b>/5</div></div>
-<div class="hud"><span class="small">Peejay</span><div class="bar"><span id="healthbar"></span></div><span class="small">Higop drone</span></div>
-<div class="arena" id="arena"><div class="skyline"></div><div class="hero" id="hero">🧍‍♂️</div><div class="beam" id="beam"></div><div class="enemy" id="enemy">🤖</div></div>
-<div class="controls"><button id="left">⬅ KALIWA</button><button class="attack" id="attack">⚔ SAKASAK</button><button id="right">KANAN ➡</button></div>
-<div class="message" id="message">Lumapit sa drone at pindutin ang SAKASAK!</div>
-</section>
-<section id="result" class="intro hidden"><h2 id="resultTitle">MISYON TAPOS</h2><p id="resultText" class="muted"></p><button class="btn" id="again">ULITIN ANG MISYON</button></section>
-<p class="small">Demo gameplay lamang. Walang cash reward o withdrawable points sa mission na ito.</p>
+<section class="intro"><div><div class="small">YEAR 2147 · PARAÑAQUE SECTOR</div><h1>PEEJAY: THE SKY PIERCER</h1><div class="muted">Lumaban bilang si Peejay Kurogane. Iligtas ang mga sektor mula sa Higop invasion.</div></div><div><div class="small">MISSION PROGRESS</div><b id="progressLabel">MISSION 01 / 10</b></div></section>
+<div class="hud">
+ <div class="stat">❤️ HP <b id="hp">100</b><span class="bar"><span id="hpbar"></span></span></div>
+ <div class="stat">⚡ STAMINA <b id="stamina">100</b></div>
+ <div class="stat">☠ ENEMIES <b id="kills">0</b>/<b id="target">5</b></div>
+ <div class="stat">🏅 CLEARED <b id="cleared">0</b>/10</div>
+</div>
+<div id="viewbox">
+ <canvas id="view"></canvas>
+ <div id="overlay"><div class="toast" id="toast">Piliin ang mission at pindutin ang START MISSION. Gumamit ng joystick para gumalaw.</div></div>
+ <section id="result" class="hidden"><div class="resultbox"><div class="small" id="resultKicker">MISSION COMPLETE</div><h2 id="resultTitle">SECTOR SECURED!</h2><p id="resultText"></p><button class="btn" id="nextMission">▶ NEXT MISSION</button><button class="btn" id="retryMission">↻ RETRY</button></div></section>
+</div>
+<div class="bottom-ui">
+ <div class="joystick" id="joystick" aria-label="Movement joystick"><div class="stick" id="stick"></div></div>
+ <div class="actions">
+  <button class="attack" id="attack">⚔ SWORD ATTACK</button>
+  <button class="dodge" id="dodge">➤ DODGE</button>
+  <button class="jump" id="jump">⬆ JUMP</button>
+  <button id="block">🛡 BLOCK</button>
+ </div>
+</div>
+<div class="mission-panel">
+ <b>🗺️ CAMPAIGN MISSIONS</b><div class="small">Manalo para ma-unlock ang kasunod. Ang progress ay sine-save sa device/browser na ito.</div>
+ <div class="mission-grid" id="missionGrid"></div>
+ <div class="mission-actions"><button id="startMission">▶ START MISSION</button><button id="resetProgress">RESET CAMPAIGN</button></div>
+</div>
+<p class="note">3D prototype build: real-time 3D scene, third-person camera, procedural human-like fighters, mobile controls, enemy pursuit and ten mission stages. Character models are procedural placeholders; production-grade scanned character assets, voice acting and cinematic cutscenes can be added in a later art pass. Demo gameplay only; no cash rewards.</p>
 </main>
-<script>
-const $=id=>document.getElementById(id);let x=18,hp=3,kills=0,energy=0,active=false,busy=false;
-function paint(){$('hero').style.left=x+'%';$('hp').textContent=hp;$('kills').textContent=kills;$('energy').textContent=energy;$('healthbar').style.width=(hp/3*100)+'%'}
-function move(d){if(!active)return;x=Math.max(5,Math.min(68,x+d));paint();if(x>48)$('message').textContent='Nasa saklaw ka na! Pindutin ang SAKASAK!'}
-function finish(win){active=false;$('game').classList.add('hidden');$('result').classList.remove('hidden');$('resultTitle').textContent=win?'SEKTOR NAILIGTAS!':'MISION FAILED';$('resultText').textContent=win?'Natalo mo ang limang Higop drones. Pero simula pa lamang ito…':'Nabigo ang depensa ng sektor. Subukan muli at iligtas ang mga tao.'}
-function attack(){if(!active||busy)return;if(x<38){$('message').textContent='Masyado ka pang malayo! Lumapit sa drone.';return}busy=true;$('beam').style.width='38%';$('message').textContent='Peejay: “Hindi ninyo kukunin ang hininga ng mga tao!”';setTimeout(()=>{$('beam').style.width='0';kills++;energy+=20;$('enemy').textContent='💥';paint();$('message').textContent='Tinamaan ang Higop drone!';setTimeout(()=>{if(kills>=5){finish(true);return}$('enemy').textContent='🤖';x=18;paint();$('message').textContent='May panibagong drone! Lumapit at umatake.';busy=false},550)},220)}
-function start(){hp=3;kills=0;energy=0;x=18;busy=false;active=true;$('result').classList.add('hidden');$('game').classList.remove('hidden');$('enemy').textContent='🤖';paint();$('message').textContent='Lumapit sa drone at pindutin ang SAKASAK!'}
-$('start').onclick=()=>{ $('start').classList.add('hidden');start()};$('again').onclick=start;$('left').onclick=()=>move(-8);$('right').onclick=()=>move(8);$('attack').onclick=attack;
-document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')move(-8);if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')move(8);if(e.key===' '||e.key==='Enter')attack()});
-</script></body></html>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+const $=id=>document.getElementById(id);
+const missions=[
+ {name:'The Draft',sector:'Parañaque Sky Wall',goal:5,desc:'Talunin ang unang Higop scouts.'},
+ {name:'Ang Pagbagsak',sector:'Kabihasnan',goal:7,desc:'Pigilan ang smoke drones.'},
+ {name:'Iligtas ang Bata',sector:'Evacuation Zone',goal:8,desc:'Protektahan ang evacuation route.'},
+ {name:'Broken Barricade',sector:'Las Piñas Outpost',goal:10,desc:'Basagin ang enemy assault line.'},
+ {name:'The Iron Behemoth',sector:'South Metro Ruins',goal:1,boss:true,desc:'Talunin ang unang Higop boss.'},
+ {name:'Night Raid',sector:'Moonlit District',goal:12,desc:'Linisin ang distrito sa gabi.'},
+ {name:'Siege Breaker',sector:'Fortress Perimeter',goal:14,desc:'Wasakin ang siege units.'},
+ {name:'The Sky Bridge',sector:'Skyway Sector',goal:16,desc:'Buksan ang daan sa reinforcement.'},
+ {name:'Heart of the Hive',sector:'Higop Core',goal:18,desc:'Sirain ang core guardians.'},
+ {name:'Last Battalion',sector:'Final Sky Wall',goal:1,boss:true,desc:'Harapin ang Overlord at iligtas ang lungsod.'}
+];
+const saveKey='gv_last_battalion_campaign_v2';
+let saved={unlocked:1,cleared:[]};try{const raw=JSON.parse(localStorage.getItem(saveKey)||'null');if(raw&&Number.isInteger(raw.unlocked))saved={unlocked:Math.max(1,Math.min(10,raw.unlocked)),cleared:Array.isArray(raw.cleared)?raw.cleared:[]}}catch{}
+let selectedMission=1,currentMission=1,scene,camera,renderer,clock,player,playerParts=[],enemies=[],effects=[],ground,castle,arenaBounds=21;
+let running=false,gameEnded=false,hp=100,stamina=100,kills=0,spawned=0,target=5,spawnTimer=0,attackCooldown=0,dodgeTimer=0,block=false,jumpVelocity=0,playerVelocity=new THREE.Vector3(),moveInput={x:0,y:0},lastFacing=1,damageFlash=0;
+const mats={
+ ground:new THREE.MeshStandardMaterial({color:0x394b43,roughness:1}),road:new THREE.MeshStandardMaterial({color:0x77746b,roughness:1}),
+ stone:new THREE.MeshStandardMaterial({color:0x707a80,roughness:.92}),dark:new THREE.MeshStandardMaterial({color:0x202b35,roughness:.85}),
+ armor:new THREE.MeshStandardMaterial({color:0x303e4d,metalness:.55,roughness:.48}),gold:new THREE.MeshStandardMaterial({color:0xc59a51,metalness:.65,roughness:.35}),
+ skin:new THREE.MeshStandardMaterial({color:0xb98565,roughness:.8}),shirt:new THREE.MeshStandardMaterial({color:0xe0e3df,roughness:.85}),
+ red:new THREE.MeshStandardMaterial({color:0x8c2927,metalness:.25,roughness:.6}),glow:new THREE.MeshStandardMaterial({color:0x67d9f2,emissive:0x126b91,emissiveIntensity:1.7}),
+ blade:new THREE.MeshStandardMaterial({color:0xdce9f0,metalness:.85,roughness:.2}),enemySkin:new THREE.MeshStandardMaterial({color:0x5a7779,roughness:.8})
+};
+function mesh(geo,mat,parent,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m}
+function limb(parent,mat,a,b,r1,r2){const va=new THREE.Vector3(...a),vb=new THREE.Vector3(...b),d=new THREE.Vector3().subVectors(vb,va);const m=mesh(new THREE.CylinderGeometry(r2,r1,d.length(),9),mat,parent);m.position.copy(va).add(vb).multiplyScalar(.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return m}
+function makeFighter(isEnemy=false,boss=false){
+ const root=new THREE.Group(),parts=[];const skin=isEnemy?mats.enemySkin:mats.skin,torso=isEnemy?mats.red:mats.shirt,armor=isEnemy?mats.dark:mats.armor;
+ mesh(new THREE.CapsuleGeometry(.38,.72,5,9),torso,root,0,1.45,0);
+ mesh(new THREE.SphereGeometry(.27,12,10),skin,root,0,2.12,0);
+ mesh(new THREE.BoxGeometry(.53,.14,.42),armor,root,0,1.94,.02);
+ const shoulderL=mesh(new THREE.SphereGeometry(.19,9,8),armor,root,-.48,1.78,0),shoulderR=mesh(new THREE.SphereGeometry(.19,9,8),armor,root,.48,1.78,0);
+ limb(root,skin,[-.48,1.72,0],[-.55,1.08,.05],.12,.09);limb(root,skin,[.48,1.72,0],[.55,1.08,.05],.12,.09);
+ limb(root,armor,[-.25,1.05,0],[-.27,.42,0],.17,.12);limb(root,armor,[.25,1.05,0],[.27,.42,0],.17,.12);
+ mesh(new THREE.BoxGeometry(.28,.16,.48),mats.dark,root,-.27,.13,.08);mesh(new THREE.BoxGeometry(.28,.16,.48),mats.dark,root,.27,.13,.08);
+ if(!isEnemy){mesh(new THREE.BoxGeometry(.08,.52,.08),mats.gold,root,.57,1.27,.03);limb(root,mats.blade,[.57,1.55,.03],[.57,2.15,.03],.035,.012)}
+ else{mesh(new THREE.SphereGeometry(boss?.25:.11,10,8),mats.glow,root,0,2.45,0);if(boss){mesh(new THREE.BoxGeometry(1.05,.2,.55),mats.red,root,0,1.8,0);for(let i=-1;i<=1;i++)mesh(new THREE.ConeGeometry(.12,.45,6),mats.gold,root,i*.34,2.55,0)}}
+ root.userData={parts:[shoulderL,shoulderR],isEnemy,boss};return root;
+}
+function buildWorld(){
+ scene=new THREE.Scene();scene.background=new THREE.Color(0x9baab1);scene.fog=new THREE.Fog(0x9baab1,32,78);
+ camera=new THREE.PerspectiveCamera(55,1,.1,120);
+ renderer=new THREE.WebGLRenderer({canvas:$('view'),antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
+ scene.add(new THREE.HemisphereLight(0xdcecff,0x35402d,2));const sun=new THREE.DirectionalLight(0xffe2bd,3.2);sun.position.set(-12,24,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-30;sun.shadow.camera.right=30;sun.shadow.camera.top=30;sun.shadow.camera.bottom=-30;scene.add(sun);
+ mesh(new THREE.PlaneGeometry(100,100),mats.ground,scene,0,-.13,0).rotation.x=-Math.PI/2;
+ mesh(new THREE.PlaneGeometry(5,52),mats.road,scene,0,-.1,-3).rotation.x=-Math.PI/2;
+ // Ruined defensive walls and towers
+ for(let i=0;i<8;i++){const x=-17+(i%4)*11,z=i<4?-14:14;mesh(new THREE.BoxGeometry(3.8,2.8,1.2),mats.stone,scene,x,1.3,z);mesh(new THREE.BoxGeometry(4,.3,1.35),mats.dark,scene,x,2.8,z);for(let j=-1;j<=1;j++)mesh(new THREE.BoxGeometry(.4,.5,1.4),mats.stone,scene,x+j*1.2,3.15,z)}
+ for(let i=0;i<24;i++){const x=(Math.random()-.5)*42,z=(Math.random()-.5)*38;if(Math.abs(x)<7&&Math.abs(z)<8)continue;const rock=mesh(new THREE.DodecahedronGeometry(.4+Math.random()*.65,0),mats.dark,scene,x,.25,z);rock.rotation.set(Math.random(),Math.random(),Math.random())}
+ player=makeFighter(false);scene.add(player);player.position.set(0,0,8);
+ camera.position.set(0,7,15);clock=new THREE.Clock();resize();window.addEventListener('resize',resize);renderer.setAnimationLoop(tick);
+}
+function resize(){if(!renderer||!camera)return;const w=$('view').clientWidth,h=$('view').clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+function save(){try{localStorage.setItem(saveKey,JSON.stringify(saved))}catch{}}
+function renderMissions(){const grid=$('missionGrid');grid.innerHTML='';missions.forEach((m,i)=>{const n=i+1,unlocked=n<=saved.unlocked,done=saved.cleared.includes(n),b=document.createElement('button');b.className='mission-tile'+(n===selectedMission?' current':'');b.disabled=!unlocked;b.innerHTML='<b>'+(done?'✓ ':'')+'MISSION '+String(n).padStart(2,'0')+'</b><div>'+m.name+'</div><small>'+m.sector+' · '+(done?'CLEARED':unlocked?'UNLOCKED':'LOCKED')+'</small>';b.onclick=()=>{selectedMission=n;renderMissions();$('toast').textContent='Selected: Mission '+n+' — '+m.desc};grid.appendChild(b)})}
+function say(s){$('toast').textContent=s}
+function hud(){ $('hp').textContent=Math.max(0,Math.ceil(hp));$('hpbar').style.width=Math.max(0,hp)+'%';$('stamina').textContent=Math.floor(stamina);$('kills').textContent=kills;$('target').textContent=target;$('cleared').textContent=saved.cleared.length;$('progressLabel').textContent='MISSION '+String(currentMission).padStart(2,'0')+' / 10'}
+function startMission(n=selectedMission){
+ if(n>saved.unlocked||n<1||n>10)return;selectedMission=n;currentMission=n;const m=missions[n-1];target=m.goal;hp=100;stamina=100;kills=0;spawned=0;spawnTimer=1;running=true;gameEnded=false;attackCooldown=0;dodgeTimer=0;block=false;jumpVelocity=0;moveInput={x:0,y:0};player.position.set(0,0,8);player.rotation.set(0,0,0);
+ enemies.forEach(e=>scene.remove(e.group));enemies=[];effects.forEach(e=>scene.remove(e));effects=[];$('result').classList.add('hidden');$('startMission').textContent='↻ RESTART MISSION';$('retryMission').textContent='↻ RETRY';$('toast').textContent=m.name+' — '+m.desc;hud();renderMissions();
+}
+function spawnEnemy(){
+ const m=missions[currentMission-1],boss=m.boss;const group=makeFighter(true,boss);scene.add(group);const angle=Math.random()*Math.PI*2,r=13+Math.random()*5;group.position.set(Math.cos(angle)*r,0,Math.sin(angle)*r);const hpMax=boss?(currentMission===10?360:220):26+currentMission*7;
+ enemies.push({group,hp:hpMax,maxHp:hpMax,speed:boss?1.15:1.5+currentMission*.035,damage:boss?18:7+Math.floor(currentMission/3),cool:1+Math.random(),boss});spawned++;
+}
+function effectAt(pos,color=0xf2d27f){const e=mesh(new THREE.SphereGeometry(.32,8,8),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.9}),scene,pos.x,.9,pos.z);effects.push({mesh:e,life:.25})}
+function hitEnemy(e,dmg){e.hp-=dmg;effectAt(e.group.position,e.boss?0xff8b52:0xf2d27f);if(e.hp<=0){scene.remove(e.group);enemies=enemies.filter(x=>x!==e);kills++;if(kills>=target&&spawned>=target){winMission()}hud()}}
+function attack(){if(!running||gameEnded||attackCooldown>0||stamina<9)return;attackCooldown=.48;stamina=Math.max(0,stamina-9);let nearest=null,dist=2.9;for(const e of enemies){const d=player.position.distanceTo(e.group.position);if(d<dist){dist=d;nearest=e}}if(nearest){const dir=new THREE.Vector3().subVectors(nearest.group.position,player.position);player.rotation.y=Math.atan2(dir.x,dir.z);hitEnemy(nearest,nearest.boss?24:42);say('Direct sword hit!')}else say('Miss! Lumapit sa kalaban bago umatake.');hud()}
+function dodge(){if(!running||gameEnded||stamina<22||dodgeTimer>0)return;stamina-=22;dodgeTimer=.38;const dir=new THREE.Vector3(moveInput.x,0,-moveInput.y);if(dir.length()<.1)dir.set(0,0,-1);dir.normalize();player.position.addScaledVector(dir,2.4);player.position.x=THREE.MathUtils.clamp(player.position.x,-arenaBounds,arenaBounds);player.position.z=THREE.MathUtils.clamp(player.position.z,-arenaBounds,arenaBounds);hud()}
+function jump(){if(!running||gameEnded||player.position.y>.02||stamina<12)return;stamina-=12;jumpVelocity=5.6;hud()}
+function setBlock(v){block=v}
+function tick(){
+ if(!renderer)return;const dt=Math.min(clock.getDelta(),.04),time=clock.elapsedTime;
+ if(running&&!gameEnded){
+  attackCooldown=Math.max(0,attackCooldown-dt);dodgeTimer=Math.max(0,dodgeTimer-dt);stamina=Math.min(100,stamina+dt*(block?5:13));
+  // Movement relative to camera-facing world axes
+  const moving=Math.hypot(moveInput.x,moveInput.y)>.08;
+  if(moving&&dodgeTimer<=0){const dir=new THREE.Vector3(moveInput.x,0,-moveInput.y).normalize();player.position.addScaledVector(dir,dt*5.4);player.rotation.y=Math.atan2(dir.x,dir.z)}
+  player.position.x=THREE.MathUtils.clamp(player.position.x,-arenaBounds,arenaBounds);player.position.z=THREE.MathUtils.clamp(player.position.z,-arenaBounds,arenaBounds);
+  if(jumpVelocity!==0||player.position.y>0){player.position.y+=jumpVelocity*dt;jumpVelocity-=14*dt;if(player.position.y<0){player.position.y=0;jumpVelocity=0}}
+  if(spawned<target){spawnTimer-=dt;if(spawnTimer<=0){spawnEnemy();spawnTimer=missions[currentMission-1].boss?999:Math.max(.55,1.8-currentMission*.07)}}
+  for(const e of [...enemies]){
+   const delta=new THREE.Vector3().subVectors(player.position,e.group.position);delta.y=0;const d=delta.length();if(d>1.65){delta.normalize();e.group.position.addScaledVector(delta,e.speed*dt);e.group.rotation.y=Math.atan2(delta.x,delta.z)}else{e.cool-=dt;if(e.cool<=0){e.cool=e.boss?1.15:1.35;if(!block&&dodgeTimer<=0){hp=Math.max(0,hp-e.damage);say(e.boss?'BOSS STRIKE! Dodge or block!':'Tinamaan ka! Gumamit ng dodge o block.');if(hp<=0)loseMission()}}}
+   e.group.position.x=THREE.MathUtils.clamp(e.group.position.x,-arenaBounds,arenaBounds);e.group.position.z=THREE.MathUtils.clamp(e.group.position.z,-arenaBounds,arenaBounds);
+   const bob=Math.sin(time*5+e.group.position.x)*.035;e.group.position.y=bob;
+  }
+  if(Math.floor(time*2)!==Math.floor((time-dt)*2))hud();
+ }
+ for(const e of [...effects]){e.life-=dt;e.mesh.scale.multiplyScalar(1+dt*4);e.mesh.material.opacity=Math.max(0,e.life*3);if(e.life<=0){scene.remove(e.mesh);effects=effects.filter(x=>x!==e)}}
+ if(player){const targetCam=new THREE.Vector3(player.position.x,player.position.y+6.3,player.position.z+10.5);camera.position.lerp(targetCam,.09);camera.lookAt(player.position.x,player.position.y+1.1,player.position.z-1.5)}
+ renderer.render(scene,camera);
+}
+function winMission(){if(gameEnded)return;gameEnded=true;running=false;if(!saved.cleared.includes(currentMission))saved.cleared.push(currentMission);saved.cleared.sort((a,b)=>a-b);saved.unlocked=Math.max(saved.unlocked,Math.min(10,currentMission+1));save();hud();renderMissions();$('resultKicker').textContent='MISSION '+String(currentMission).padStart(2,'0')+' COMPLETE';$('resultTitle').textContent=currentMission===10?'THE CITY IS SAVED!':'SECTOR SECURED!';$('resultText').textContent='Natalo mo ang lahat ng kalaban sa '+missions[currentMission-1].sector+'. Na-unlock na ang susunod na mission!';$('nextMission').classList.toggle('hidden',currentMission===10);$('retryMission').textContent='PLAY AGAIN';$('result').classList.remove('hidden');say('Mission complete! Progress saved on this device.')}
+function loseMission(){if(gameEnded)return;gameEnded=true;running=false;$('resultKicker').textContent='MISSION FAILED';$('resultTitle').textContent='BUMAGSAK ANG DEPENSA';$('resultText').textContent='Subukan ulit. Gumamit ng dodge, jump at block para makaiwas sa attacks.';$('nextMission').classList.add('hidden');$('retryMission').textContent='↻ RETRY MISSION';$('result').classList.remove('hidden')}
+function bindHold(id,down,up){const el=$(id);el.addEventListener('pointerdown',e=>{e.preventDefault();down();el.setPointerCapture(e.pointerId)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>el.addEventListener(ev,e=>{e.preventDefault();up()}))}
+bindHold('attack',attack,()=>{});bindHold('dodge',dodge,()=>{});bindHold('jump',jump,()=>{});bindHold('block',()=>setBlock(true),()=>setBlock(false));
+const joy=$('joystick'),stick=$('stick');let joyId=null;
+function joyMove(e){const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy;const max=r.width*.34,len=Math.hypot(dx,dy);if(len>max){dx=dx/len*max;dy=dy/len*max}stick.style.transform='translate('+dx+'px,'+dy+'px)';moveInput={x:dx/max,y:dy/max}}
+joy.addEventListener('pointerdown',e=>{e.preventDefault();joyId=e.pointerId;joy.setPointerCapture(joyId);joyMove(e)});
+joy.addEventListener('pointermove',e=>{if(e.pointerId===joyId)joyMove(e)});
+function joyEnd(e){if(e.pointerId!==joyId)return;joyId=null;moveInput={x:0,y:0};stick.style.transform='translate(0,0)'}
+joy.addEventListener('pointerup',joyEnd);joy.addEventListener('pointercancel',joyEnd);
+$('startMission').onclick=()=>startMission(selectedMission);
+$('retryMission').onclick=()=>startMission(currentMission);
+$('nextMission').onclick=()=>{selectedMission=Math.min(10,currentMission+1);startMission(selectedMission)};
+$('resetProgress').onclick=()=>{if(confirm('I-reset ang campaign progress sa device na ito?')){saved={unlocked:1,cleared:[]};save();selectedMission=1;renderMissions();hud();say('Campaign progress reset.')}};
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')moveInput.x=-1;if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')moveInput.x=1;if(e.key==='ArrowUp'||e.key.toLowerCase()==='w')moveInput.y=1;if(e.key==='ArrowDown'||e.key.toLowerCase()==='s')moveInput.y=-1;if(e.code==='Space'){e.preventDefault();attack()}if(e.key.toLowerCase()==='j')jump();if(e.key.toLowerCase()==='k')dodge()});
+document.addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight','a','d'].includes(e.key))moveInput.x=0;if(['ArrowUp','ArrowDown','w','s'].includes(e.key))moveInput.y=0});
+buildWorld();renderMissions();selectedMission=Math.min(saved.unlocked,10);renderMissions();hud();say('Piliin ang mission at START MISSION. Joystick: move · Sword: attack · Dodge/Jump/Block: survive.');
+</script>
+</body></html>
