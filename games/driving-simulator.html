@@ -35,9 +35,12 @@
 <script type="module">
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getAuth,onAuthStateChanged,setPersistence,browserLocalPersistence} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyCeMwYBG6AVch8CXrY-4ngcp9cmWtqsruU",authDomain:"gameverse-102213.firebaseapp.com",databaseURL:"https://gameverse-102213-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"gameverse-102213",storageBucket:"gameverse-102213.firebasestorage.app",messagingSenderId:"87748222074",appId:"1:87748222074:web:ef7757ff1df09e84006fc3"};
-const auth=getAuth(initializeApp(firebaseConfig));
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+// Match the lobby: persist the signed-in player session across game pages.
+await setPersistence(auth,browserLocalPersistence).catch(err=>console.error("Auth persistence setup failed:",err));
 onAuthStateChanged(auth,user=>{if(user)document.documentElement.classList.remove("gv-auth-check");else location.replace("../?login=required")});
 const host=document.querySelector("#scene");
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x87b8d7);scene.fog=new THREE.Fog(0x87b8d7,65,230);
