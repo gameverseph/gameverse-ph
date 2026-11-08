@@ -68,6 +68,40 @@ const saveKey='gv_last_battalion_campaign_v2';
 let saved={unlocked:1,cleared:[]};try{const raw=JSON.parse(localStorage.getItem(saveKey)||'null');if(raw&&Number.isInteger(raw.unlocked))saved={unlocked:Math.max(1,Math.min(10,raw.unlocked)),cleared:Array.isArray(raw.cleared)?raw.cleared:[]}}catch{}
 let selectedMission=1,currentMission=1,scene,camera,renderer,clock,player,playerParts=[],enemies=[],effects=[],ground,castle,arenaBounds=21;
 let running=false,gameEnded=false,hp=100,stamina=100,kills=0,spawned=0,target=5,spawnTimer=0,attackCooldown=0,dodgeTimer=0,block=false,jumpVelocity=0,playerVelocity=new THREE.Vector3(),moveInput={x:0,y:0},lastFacing=1,damageFlash=0;
+let locationGroup=null;
+const locationStyles=[
+ {sky:0x9baab1,fog:0x9baab1,ground:0x394b43,accent:0x6d7780,label:'PARAÑAQUE SKY WALL'},
+ {sky:0x777f86,fog:0x777f86,ground:0x4b4a43,accent:0x554b47,label:'KABIHASNAN SMOKE ZONE'},
+ {sky:0xb7c7cf,fog:0xb7c7cf,ground:0x65745e,accent:0x9b8664,label:'EVACUATION ZONE'},
+ {sky:0x9b8f7c,fog:0x9b8f7c,ground:0x62584d,accent:0x76685b,label:'LAS PIÑAS OUTPOST'},
+ {sky:0x68737e,fog:0x68737e,ground:0x3e454d,accent:0x3c5264,label:'SOUTH METRO RUINS'},
+ {sky:0x17243b,fog:0x17243b,ground:0x202b35,accent:0x304e70,label:'MOONLIT DISTRICT'},
+ {sky:0x8c6650,fog:0x8c6650,ground:0x51443c,accent:0x9a5a3f,label:'FORTRESS PERIMETER'},
+ {sky:0x8ba6b5,fog:0x8ba6b5,ground:0x52636a,accent:0x587f91,label:'SKYWAY SECTOR'},
+ {sky:0x34364b,fog:0x34364b,ground:0x292d3d,accent:0x594b75,label:'HIGOP CORE'},
+ {sky:0x6b2528,fog:0x6b2528,ground:0x382a2d,accent:0xa34c39,label:'FINAL SKY WALL'}
+];
+function buildMissionLocation(n){
+ const s=locationStyles[n-1];scene.background.setHex(s.sky);scene.fog.color.setHex(s.fog);
+ mats.ground.color.setHex(s.ground);
+ if(locationGroup){scene.remove(locationGroup);locationGroup.traverse(o=>{if(o.geometry)o.geometry.dispose()})}
+ locationGroup=new THREE.Group();scene.add(locationGroup);
+ // Each mission gets a different skyline/landmark silhouette and lighting palette.
+ const addBox=(w,h,d,x,y,z,color=s.accent)=>mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color,roughness:.9}),locationGroup,x,y,z);
+ const addTower=(x,z,h,r=.8,color=s.accent)=>{mesh(new THREE.CylinderGeometry(r,r*1.12,h,7),new THREE.MeshStandardMaterial({color,roughness:.95}),locationGroup,x,h/2,z)};
+ if(n===1){for(let x of [-16,16]){addBox(5,9,4,x,4,-24,0x596b78);addBox(5,6,4,x*1.25,2.5,22,0x68727a)}addBox(1,12,1,0,6,-25,0xb98c4b)}
+ if(n===2){for(let i=0;i<12;i++){const x=-19+(i%6)*7,z=-24+Math.floor(i/6)*43;addTower(x,z,8+(i%3)*3,.7,0x4c4b4b)}for(let i=0;i<6;i++){const smoke=mesh(new THREE.CylinderGeometry(1.2,2.3,9,8),new THREE.MeshStandardMaterial({color:0x46494d,transparent:true,opacity:.55}),locationGroup,-17+i*7,5,-18);smoke.rotation.z=(i%2?.15:-.15)}}
+ if(n===3){for(let i=0;i<9;i++){const x=-20+(i%3)*20,z=-18+Math.floor(i/3)*18;addBox(5,3,3,x,1.5,z,0x9b8b70)}for(let x of [-12,12])addTower(x,-22,10,.35,0x788d76)}
+ if(n===4){for(let i=0;i<7;i++){const x=-21+i*7;addBox(5,2.5,5,x,1.2,-22+(i%2)*7,0x6e6257);addBox(5,4,4,x,2,22-(i%2)*7,0x574f48)}}
+ if(n===5){for(let i=0;i<8;i++){const x=-21+i*6;addTower(x,-24,5+(i%4)*2,.9,0x394c5b)}addBox(15,1,2,0,7,-26,0x526c7e)}
+ if(n===6){for(let i=0;i<10;i++){const x=-22+i*5;addBox(3,10+(i%3)*3,3,x,5,-25,0x1d2d48);addBox(3,8,3,x,4,25,0x263b58)}}
+ if(n===7){for(let x of [-19,19]){addBox(4,8,5,x,4,-22,0x79533e);addBox(4,8,5,x,4,22,0x79533e)}for(let i=0;i<5;i++)addTower(-12+i*6,-28,7,.6,0xb1784c)}
+ if(n===8){addBox(34,1.2,5,0,7,-23,0x638899);for(let x of [-15,15])addBox(2,13,2,x,6,-23,0x4e6d7e);for(let i=0;i<6;i++)addTower(-20+i*8,24,6+(i%2)*4,.45,0x557989)}
+ if(n===9){for(let i=0;i<12;i++){const a=i*Math.PI/6;addTower(Math.cos(a)*19,Math.sin(a)*19,7+(i%3)*3,.9,0x55496f)}addBox(8,12,8,0,6,-25,0x4e3f68);addBox(2,17,2,0,13,-25,0x8a5da6)}
+ if(n===10){for(let x of [-18,-9,0,9,18]){addBox(3,13,3,x,6.5,-27,0x873c35);addBox(3,11,3,x,5.5,27,0x70312f)}addBox(22,2,2,0,13,-27,0xc08a50);addTower(0,-30,18,1.2,0xb65c3f)}
+ $('toast').textContent='LOCATION: '+s.label+' — '+missions[n-1].desc;
+}
+
 const mats={
  ground:new THREE.MeshStandardMaterial({color:0x394b43,roughness:1}),road:new THREE.MeshStandardMaterial({color:0x77746b,roughness:1}),
  stone:new THREE.MeshStandardMaterial({color:0x707a80,roughness:.92}),dark:new THREE.MeshStandardMaterial({color:0x202b35,roughness:.85}),
@@ -110,7 +144,7 @@ function renderMissions(){const grid=$('missionGrid');grid.innerHTML='';missions
 function say(s){$('toast').textContent=s}
 function hud(){ $('hp').textContent=Math.max(0,Math.ceil(hp));$('hpbar').style.width=Math.max(0,hp)+'%';$('stamina').textContent=Math.floor(stamina);$('kills').textContent=kills;$('target').textContent=target;$('cleared').textContent=saved.cleared.length;$('progressLabel').textContent='MISSION '+String(currentMission).padStart(2,'0')+' / 10'}
 function startMission(n=selectedMission){
- if(n>saved.unlocked||n<1||n>10)return;selectedMission=n;currentMission=n;const m=missions[n-1];target=m.goal;hp=100;stamina=100;kills=0;spawned=0;spawnTimer=1;running=true;gameEnded=false;attackCooldown=0;dodgeTimer=0;block=false;jumpVelocity=0;moveInput={x:0,y:0};player.position.set(0,0,8);player.rotation.set(0,0,0);
+ if(n>saved.unlocked||n<1||n>10)return;selectedMission=n;currentMission=n;const m=missions[n-1];buildMissionLocation(n);target=m.goal;hp=100;stamina=100;kills=0;spawned=0;spawnTimer=1;running=true;gameEnded=false;attackCooldown=0;dodgeTimer=0;block=false;jumpVelocity=0;moveInput={x:0,y:0};player.position.set(0,0,8);player.rotation.set(0,0,0);
  enemies.forEach(e=>scene.remove(e.group));enemies=[];effects.forEach(e=>scene.remove(e));effects=[];$('result').classList.add('hidden');$('startMission').textContent='↻ RESTART MISSION';$('retryMission').textContent='↻ RETRY';$('toast').textContent=m.name+' — '+m.desc;hud();renderMissions();
 }
 function spawnEnemy(){
