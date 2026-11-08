@@ -56,7 +56,7 @@ function makeCar(){
  box(1.55,.72,1.85,0x172b43,0,1.55,-.25,g);
  box(1.7,.16,1.8,0xc8e4f0,0,1.94,-.25,g);
  for(const x of [-.78,.78])for(const z of [-1.35,1.35]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.39,.39,.22,20),mat(0x111318));w.rotation.z=Math.PI/2;w.position.set(x,.48,z);g.add(w);const hub=new THREE.Mesh(new THREE.CylinderGeometry(.16,.16,.23,16),mat(0x9ba7ad));hub.rotation.z=Math.PI/2;hub.position.copy(w.position);g.add(hub)}
- for(const x of [-.7,.7]){box(.35,.2,.08,0xfff0bb,x,1.02,2.06,g);box(.35,.2,.08,0xff3322,x,1.02,-2.06,g)}
+ for(const x of [-.7,.7]){box(.35,.2,.08,0xfff0bb,x,1.02,-2.06,g);box(.35,.2,.08,0xff3322,x,1.02,2.06,g)}
  scene.add(g);return g
 }
 const car=makeCar();car.position.set(0,0,8);
