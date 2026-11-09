@@ -25,7 +25,7 @@ h1{font-size:clamp(22px,4vw,34px);margin:8px 0;color:#f1d49b}.sub{color:#aeb8c1;
 .combat-actions button.active{outline:2px solid #f3d18b;background:#8a653b}
 #attack{background:#9a3e36}#pause{background:#4b6680}
 @media(max-width:560px){.combat-panel{grid-template-columns:88px 1fr;gap:5px;padding:6px}.move-pad{grid-template-columns:repeat(3,28px);grid-template-rows:repeat(2,32px);gap:3px;margin:auto}.move-pad button{min-height:32px;padding:2px}.combat-actions{grid-template-columns:repeat(3,minmax(54px,1fr));gap:4px}.combat-actions button{min-height:36px;padding:4px 2px;font-size:10px}#gamebox{min-height:480px}#view{height:68vh;min-height:480px}}
-@media(max-width:560px){main{padding:9px}.toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{font-size:12px;padding:7px 9px}#view{height:55vh;min-height:310px}}
+@media(max-width:560px){main{padding:9px}.toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{font-size:12px;padding:7px 9px}#view{height:68vh;min-height:480px}}
 </style><script>document.documentElement.classList.add("gv-auth-check");</script>
 <style>html.gv-auth-check body{visibility:hidden!important}</style>
 <script type="module">
@@ -48,8 +48,6 @@ onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remov
 <div class="stat">⚔️ Guards <span id="guards">0</span></div>
 <div class="stat">🧑 Warrior HP <span id="playerHp">100</span></div>
 </div>
-<div id="gamebox"><canvas id="view"></canvas><div id="hint">Drag to rotate camera · Pinch/scroll to zoom · Tap a green pad to build</div></div>
-<div id="message" role="status">Move your warrior with the directional pad. Choose a weapon and attack nearby enemies.</div>
 <section class="combat-panel" aria-label="Warrior combat controls">
 <div class="move-pad" id="movePad">
 <button data-dir="up" aria-label="Move forward">▲</button><button data-dir="left" aria-label="Move left">◀</button><button data-dir="down" aria-label="Move backward">▼</button><button data-dir="right" aria-label="Move right">▶</button>
@@ -57,7 +55,8 @@ onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remov
 <div class="combat-actions">
 <button id="sword" class="active">⚔ Sword</button><button id="axe">🪓 Axe</button><button id="bow">🏹 Bow</button>
 <button id="attack">ATTACK</button><button id="pause">Ⅱ Pause</button><button id="resume" disabled>▶ Resume</button>
-</div></section>
+</div></section></div>
+<div id="message" role="status">Move your warrior with the directional pad. Choose a weapon and attack nearby enemies.</div>
 <div class="toolbar">
 <button class="btn" id="archer">🏹 Archer Tower · 40</button>
 <button class="btn" id="cannon">💥 Cannon · 70</button>
