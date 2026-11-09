@@ -13,7 +13,7 @@ h1{font-size:clamp(22px,4vw,34px);margin:8px 0;color:#f1d49b}.sub{color:#aeb8c1;
 #view{display:block;width:100%;height:min(62vh,570px);min-height:300px;touch-action:none}
 #hint{position:absolute;left:10px;top:10px;background:#101820cc;border:1px solid #697987;border-radius:8px;padding:7px 9px;font-size:12px;color:#f4dfb4;pointer-events:none}
 #message{min-height:24px;color:#f5d28f;padding:10px 2px;font-size:13px}
-.toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.start-row{display:flex;gap:8px;margin:10px 0}.start-row #start{flex:1;min-height:54px;font-size:17px;font-weight:950;letter-spacing:.4px;box-shadow:0 4px 16px #0006}
 .toolbar button{min-height:48px;font-size:12px;padding:8px 5px}.toolbar button.active{outline:3px solid #f6d58d;background:#e2b765}.toolbar button:disabled{opacity:.45;cursor:not-allowed}
 #start{background:#4d9c75;color:#07160e;border-color:#83c9a3}#restart{background:#596979;color:#fff}
 .note{font-size:12px;color:#9eabb6;line-height:1.5;margin:12px 2px}
@@ -25,7 +25,7 @@ h1{font-size:clamp(22px,4vw,34px);margin:8px 0;color:#f1d49b}.sub{color:#aeb8c1;
 .combat-actions button.active{outline:2px solid #f3d18b;background:#8a653b}
 #attack{background:#9a3e36}#pause{background:#4b6680}
 @media(max-width:560px){.combat-panel{grid-template-columns:1fr}.move-pad{margin:auto}.combat-actions{grid-template-columns:repeat(3,minmax(80px,1fr))}}
-@media(max-width:560px){main{padding:9px}.toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{font-size:12px;padding:7px 9px}#view{height:55vh;min-height:310px}}
+@media(max-width:560px){main{padding:9px 9px 205px}.combat-panel{position:fixed;z-index:7;left:8px;right:8px;bottom:max(8px,env(safe-area-inset-bottom));margin:0;box-shadow:0 8px 28px #000b;background:#101d29f5}.move-pad{grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,38px)}.move-pad button,.combat-actions button{min-height:40px}.start-row{position:sticky;top:4px;z-index:6;background:#0b1118;padding:5px 0}.toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{font-size:12px;padding:7px 9px}#view{height:55vh;min-height:310px}}
 </style><script>document.documentElement.classList.add("gv-auth-check");</script>
 <style>html.gv-auth-check body{visibility:hidden!important}</style>
 <script type="module">
@@ -48,7 +48,7 @@ onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remov
 <div class="stat">⚔️ Guards <span id="guards">0</span></div>
 <div class="stat">🧑 Warrior HP <span id="playerHp">100</span></div>
 </div>
-<div id="gamebox"><canvas id="view"></canvas><div id="hint">Drag to rotate camera · Pinch/scroll to zoom · Tap a green pad to build</div></div>
+<div class="start-row"><button class="btn" id="start">⚔️ START WAVE 1</button></div>\n<div id="gamebox"><canvas id="view"></canvas><div id="hint">Drag to rotate camera · Pinch/scroll to zoom · Tap a green pad to build</div></div>
 <div id="message" role="status">Move your warrior with the directional pad. Choose a weapon and attack nearby enemies.</div>
 <section class="combat-panel" aria-label="Warrior combat controls">
 <div class="move-pad" id="movePad">
@@ -128,7 +128,7 @@ let drag=null,camAngle=.45,camRadius=33,camHeight=20;
 function setupCamera(){canvas.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,moved:false};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>4)drag.moved=true;if(drag.moved){camAngle-=dx*.006;camHeight=Math.max(10,Math.min(32,camHeight+dy*.06));drag.x=e.clientX;drag.y=e.clientY}});canvas.addEventListener('pointerup',()=>{drag=null});canvas.addEventListener('wheel',e=>{camRadius=Math.max(20,Math.min(48,camRadius+e.deltaY*.025))},{passive:true})}
 function onTap(e){if(drag?.moved)return;const r=canvas.getBoundingClientRect();mouse.x=((e.clientX-r.left)/r.width)*2-1;mouse.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(scene.children,true);for(const h of hits){let o=h.object;while(o&& !o.userData.pad)o=o.parent;if(o?.userData.pad){place(o.userData.pad);return}}}
 function place(p){if(!selected||gameOver)return;if(buildings.some(b=>b.x===p.x&&b.z===p.z)){say('Occupied pad. Choose another green pad.');return}if(gold<prices[selected]){say('Not enough gold. Defeat enemies to earn more.');return}gold-=prices[selected];buildings.push(makeTower(p.x,p.z,selected));selected=null;updateHud();say('Defense built. Start a wave when you are ready.')}
-function choose(t){if(gameOver)return;if(gold<prices[t]){say('Not enough gold for this defense.');return}selected=selected===t?null:t;document.querySelectorAll('.toolbar .btn').forEach(b=>b.classList.remove('active'));if(selected)$ (t).classList.add('active');say(selected?'Tap a green build pad to place your '+t+'.':'Build selection cancelled.')}
+function choose(t){if(gameOver)return;if(gold<prices[t]){say('Not enough gold for this defense.');return}selected=selected===t?null:t;document.querySelectorAll('.toolbar .btn').forEach(b=>b.classList.remove('active'));if(selected)$(t).classList.add('active');say(selected?'Tap a green build pad to place your '+t+'.':'Build selection cancelled.')}
 function say(s){$('message').textContent=s}
 function updateHud(){$('playerHp').textContent=Math.max(0,Math.ceil(warriorHp));$('hp').textContent=Math.max(0,Math.ceil(hp));$('maxhp').textContent=maxHp;$('gold').textContent=gold;$('wave').textContent=wave;$('kills').textContent=kills;$('built').textContent=buildings.length;$('guards').textContent=guards.length}
 function startWave(){if(gameOver||spawning||enemies.length||wave>=10)return;wave++;spawnLeft=5+wave*2;spawning=true;spawnClock=0;cleared=false;$('start').disabled=true;say('Wave '+wave+'! Enemy troops are marching toward your castle.');updateHud()}
@@ -146,7 +146,7 @@ for(const fx of [...effects]){fx.life-=dt;fx.mesh.scale.multiplyScalar(1+dt*4);f
 for(const q of [...bolts]){if(!q.target||!enemies.includes(q.target)){scene.remove(q.mesh);bolts=bolts.filter(x=>x!==q);continue}const dest=q.target.mesh.position.clone().add(new THREE.Vector3(0,1.4,0));const delta=dest.sub(q.mesh.position),len=delta.length(),step=q.speed*dt;if(len<step){const target=q.target,point=target.mesh.position.clone();hitEnemy(target,q.damage);if(q.splash)for(const other of [...enemies])if(other.mesh.position.distanceTo(point)<q.splash)hitEnemy(other,2);scene.remove(q.mesh);bolts=bolts.filter(x=>x!==q)}else q.mesh.position.add(delta.normalize().multiplyScalar(step))}
 if(warriorHp<=0){gameOver=true;$('start').disabled=true;say('Your warrior has fallen. Restart to try again.')}
 if(hp<=0){hp=0;gameOver=true;$('start').disabled=true;say('The castle has fallen. Press Restart to try again.')}
-if(!spawning&&enemies.length===0&&!cleared&&wave>0&&!gameOver){cleared=true;gold+=25;$('start').disabled=false;say(wave===10?'VICTORY! You survived all 10 waves! +25 gold.':'Wave '+wave+' cleared! +25 gold. Prepare for the next attack.')}
+if(!spawning&&enemies.length===0&&!cleared&&wave>0&&!gameOver){cleared=true;gold+=25;$('start').disabled=false;$('start').textContent='⚔️ START WAVE '+(wave+1);say(wave===10?'VICTORY! You survived all 10 waves! +25 gold.':'Wave '+wave+' cleared! +25 gold. Prepare for the next attack.')}
 if(wave>=10&&cleared)$('start').disabled=true;updateHud()}
 renderer.render(scene,camera)}
 function restart(){location.reload()}
