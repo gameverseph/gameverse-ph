@@ -21,7 +21,8 @@
 </style>
 </head>
 <body>
-<div id="scene"></div>\n<div class="start-screen" id="startScreen"><div class="start-card"><h2>GAMEVERSE PH · DRIVE</h2><p>Handa ka na? Pindutin ang Start Drive para simulan ang 3D driving simulator. Gamitin ang steering pad at accelerator sa screen.</p><button class="start-drive" id="startDrive" type="button">▶ START DRIVE</button></div></div>
+<div id="scene"></div>
+<div class="start-screen" id="startScreen"><div class="start-card"><h2>GAMEVERSE PH · DRIVE</h2><p>Handa ka na? Pindutin ang Start Drive para simulan ang 3D driving simulator. Gamitin ang steering pad at accelerator sa screen.</p><button class="start-drive" id="startDrive" type="button">▶ START DRIVE</button></div></div>
 <div class="hud"><div class="pill">GAMEVERSE PH <b>DRIVE</b></div><div class="pill">DISTANCE <b id="distance">0 m</b></div><div class="pill">MODE <b id="mode">FREE DRIVE</b></div></div>
 <div class="topright"><button class="ui-btn" id="cameraBtn">CAMERA</button><button class="ui-btn" id="resetBtn">RESET</button><a class="ui-btn" href="../" style="text-decoration:none">LOBBY</a></div>
 <div class="center" id="message"><strong>3D DRIVING SIMULATOR</strong><small>Accelerate to start your drive</small></div>
@@ -81,7 +82,8 @@ const reverseBtn=document.querySelector("#reverseBtn");const reverseOn=e=>{e.pre
 const keyMap={ArrowLeft:"left",a:"left",ArrowRight:"right",d:"right",ArrowUp:"accelerate",w:"accelerate",ArrowDown:"brake",s:"brake"," ":"handbrake"};
 addEventListener("keydown",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key]){held[keyMap[key]]=true;e.preventDefault()}if(key==="r")setGear("R");if(key==="n")setGear("N");if(key==="f")setGear("D")});
 addEventListener("keyup",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key])held[keyMap[key]]=false});
-document.querySelector("#cameraBtn").onclick=()=>cameraMode=(cameraMode+1)%2;\ndocument.querySelector("#startDrive").onclick=()=>{driveStarted=true;document.querySelector("#startScreen").classList.add("hidden");document.querySelector("#message").style.display="block"};
+document.querySelector("#cameraBtn").onclick=()=>cameraMode=(cameraMode+1)%2;
+document.querySelector("#startDrive").onclick=()=>{driveStarted=true;document.querySelector("#startScreen").classList.add("hidden");document.querySelector("#message").style.display="block"};
 function reset(){speed=0;distance=0;driveStarted=false;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";document.querySelector("#startScreen").classList.remove("hidden");setGear("D")}
 document.querySelector("#resetBtn").onclick=reset;
 function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.04);last=now;
