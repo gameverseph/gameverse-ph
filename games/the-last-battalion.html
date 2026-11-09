@@ -68,7 +68,7 @@ const missionTemplates=[
  {name:'Last Battalion',sector:'Final Sky Wall',goal:1,boss:true,desc:'Harapin ang Overlord at iligtas ang lungsod.'}
 ];
 const missionLocations=['Parañaque Sector','Manila Intramuros','Cebu Lapu-Lapu','Davao Eden Park','Baguio Burnham Park','Iloilo Esplanade','Bacolod MassKara','Cagayan de Oro','Zamboanga Paseo','Tagaytay Taal View','Makati Ayala','Pasig Ortigas','Caloocan Monumento','Muntinlupa Alabang','Las Piñas Bamboo','Marikina River Park','Antipolo Taktak','Batangas Taal Lake','Laguna Pagsanjan','Pampanga Clark'];
-const missions=Array.from({length:100},(_,i)=>{const base=missionTemplates[i%10],chapter=Math.floor(i/10)+1;return {...base,name:chapter===1?base.name:base.name+' · Chapter '+chapter,sector:missionLocations[i%20]+' · Zone '+chapter,goal:base.goal+Math.floor(i/10)*2}});
+const missions=Array.from({length:100},(_,i)=>{const base=missionTemplates[i%10],chapter=Math.floor(i/10)+1;return {...base,name:chapter===1?base.name:base.name+' · Chapter '+chapter,sector:missionLocations[i%20]+' · Zone '+chapter,goal:base.boss?base.goal:base.goal+Math.floor(i/10)*2}});
 const saveKey='gv_last_battalion_campaign_v2';
 let saved={unlocked:1,cleared:[]};try{const raw=JSON.parse(localStorage.getItem(saveKey)||'null');if(raw&&Number.isInteger(raw.unlocked))saved={unlocked:Math.max(1,Math.min(100,raw.unlocked)),cleared:Array.isArray(raw.cleared)?raw.cleared:[]}}catch{}
 let selectedMission=1,currentMission=1,scene,camera,renderer,clock,player,playerParts=[],enemies=[],effects=[],ground,castle,arenaBounds=21;
