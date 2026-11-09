@@ -8,13 +8,13 @@
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080d18;color:#fff;font-family:Arial,sans-serif}html.gv-auth-check body{visibility:hidden!important}#scene{position:fixed;inset:0}canvas{display:block}
 .hud{position:fixed;z-index:3;left:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap}.pill{background:#07111ddd;border:1px solid #426078;border-radius:10px;padding:8px 11px;font-size:12px}.pill b{color:#00f5a0}
 .topright{position:fixed;z-index:4;right:12px;top:12px;display:flex;gap:8px}.ui-btn{border:1px solid #567080;background:#101d2c;color:white;padding:10px 13px;border-radius:10px;font-weight:800}
-.controls{position:fixed;z-index:4;bottom:14px;left:0;right:0;display:flex;justify-content:space-between;align-items:end;padding:0 14px;pointer-events:none}.cluster{display:flex;gap:9px;align-items:end;pointer-events:auto}.control{width:66px;height:66px;border-radius:18px;border:1px solid #8aa7b8;background:#10243bdc;color:#fff;font-weight:900;font-size:12px;touch-action:none;user-select:none}.control.big{width:76px;height:76px;background:#063d2b;border-color:#00e99a}.control.reverse{background:#183b55;border-color:#70bde8}.control.brake{background:#4b171c;border-color:#f66}.control:active,.control.active{filter:brightness(1.6);transform:scale(.96)}
-.stick-wrap{position:fixed;z-index:5;left:16px;bottom:18px;width:126px;height:126px;display:grid;place-items:center;touch-action:none;user-select:none}
+.controls{position:fixed;z-index:8;bottom:max(14px,env(safe-area-inset-bottom));left:0;right:0;display:flex;justify-content:space-between;align-items:end;padding:0 14px;pointer-events:none}.cluster{display:flex;gap:9px;align-items:end;pointer-events:auto}.control{width:66px;height:66px;border-radius:18px;border:1px solid #8aa7b8;background:#10243bdc;color:#fff;font-weight:900;font-size:12px;touch-action:none;user-select:none}.control.big{width:76px;height:76px;background:#063d2b;border-color:#00e99a}.control.reverse{background:#183b55;border-color:#70bde8}.control.brake{background:#4b171c;border-color:#f66}.control:active,.control.active{filter:brightness(1.6);transform:scale(.96)}
+.stick-wrap{position:fixed;z-index:7;left:16px;bottom:18px;width:126px;height:126px;display:grid;place-items:center;touch-action:none;user-select:none}
 .stick-pad{width:116px;height:116px;border-radius:50%;border:2px solid #8aa7b8;background:radial-gradient(circle,#28445b,#0b1a2bdc);box-shadow:0 4px 18px #0008;position:relative;touch-action:none}
 .stick-thumb{position:absolute;width:48px;height:48px;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border:2px solid #d8f5ff;background:linear-gradient(145deg,#00e99a,#087c70);box-shadow:0 3px 12px #0009;pointer-events:none}
 .stick-label{position:absolute;left:50%;top:-19px;transform:translateX(-50%);font-size:10px;font-weight:800;color:#d9efff;white-space:nowrap;text-shadow:0 1px 4px #000}
 @media(max-width:600px){.stick-wrap{width:112px;height:112px;left:10px;bottom:12px}.stick-pad{width:104px;height:104px}.stick-thumb{width:44px;height:44px}}
-.center{position:fixed;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;text-shadow:0 2px 8px #000}.center strong{font-size:clamp(20px,4vw,34px);color:#fff}.center small{display:block;color:#cde3ef;margin-top:6px}
+.center{position:fixed;z-index:6;left:50%;top:42%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;text-shadow:0 2px 8px #000;width:min(92vw,420px)}.center strong{font-size:clamp(20px,4vw,34px);color:#fff}.center small{display:block;color:#cde3ef;margin-top:6px}#startDrive{pointer-events:auto;margin-top:14px;padding:13px 22px;border:2px solid #9fffdc;border-radius:13px;background:#087b53;color:#fff;font-size:16px;font-weight:900;box-shadow:0 5px 22px #0009;touch-action:manipulation}
 .gearbox{position:fixed;z-index:4;right:14px;bottom:105px;display:flex;gap:5px}.gear{background:#132438;color:#fff;border:1px solid #5b7182;border-radius:8px;padding:9px 12px;font-weight:bold}.gear.active{background:#00d88b;color:#04130d}
 .speed{position:fixed;z-index:4;left:50%;bottom:106px;transform:translateX(-50%);background:#07111ddd;border:1px solid #426078;border-radius:14px;padding:8px 18px;text-align:center;min-width:115px}.speed b{font-size:27px;color:#00f5a0}.speed small{display:block;color:#a9c1cf;font-size:10px}
 @media(max-width:600px){.control{width:58px;height:58px;border-radius:15px}.control.big{width:68px;height:68px}.pill{font-size:10px;padding:7px 8px}.speed{bottom:99px}.gearbox{bottom:100px}}
@@ -24,7 +24,7 @@
 <div id="scene"></div>
 <div class="hud"><div class="pill">GAMEVERSE PH <b>DRIVE</b></div><div class="pill">DISTANCE <b id="distance">0 m</b></div><div class="pill">MODE <b id="mode">FREE DRIVE</b></div></div>
 <div class="topright"><button class="ui-btn" id="cameraBtn">CAMERA</button><button class="ui-btn" id="resetBtn">RESET</button><a class="ui-btn" href="../" style="text-decoration:none">LOBBY</a></div>
-<div class="center" id="message"><strong>3D DRIVING SIMULATOR</strong><small>Accelerate to start your drive</small></div>
+<div class="center" id="message"><strong>3D DRIVING SIMULATOR</strong><small>Press START DRIVE, then use the touch controls below</small><button id="startDrive" type="button">▶ START DRIVE</button></div>
 <div class="speed"><b id="speed">0</b><small>KM/H</small></div>
 <div class="gearbox"><button class="gear active" data-gear="D">D</button><button class="gear" data-gear="N">N</button><button class="gear" data-gear="R">R</button></div>
 <div class="stick-wrap" id="stickWrap" aria-label="Drag steering and drive control"><div class="stick-label">DRAG TO STEER / DRIVE</div><div class="stick-pad" id="stickPad"><div class="stick-thumb" id="stickThumb"></div></div></div>
@@ -66,7 +66,7 @@ const car=makeCar();car.position.set(0,0,8);
 const trees=[];
 for(let z=28;z>-390;z-=13)for(const side of [-1,1]){const x=side*(12+Math.random()*9);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.22,.32,2,7),mat(0x65452d));trunk.position.set(x,1,z-Math.random()*8);scene.add(trunk);const crown=new THREE.Mesh(new THREE.ConeGeometry(1.7,4.2,8),mat(0x1d603b));crown.position.set(x,3.8,trunk.position.z);crown.castShadow=true;scene.add(crown);trees.push({trunk,crown})}
 const obstacles=[];for(let i=0;i<12;i++){const o=box(1.5,.9,1.5,0xd18a22,(Math.random()-.5)*8,.45,-30-i*27);obstacles.push(o)}
-let speed=0,steer=0,distance=0,gear="D",cameraMode=0,steerInput=0;const held={};let last=performance.now();
+let speed=0,steer=0,distance=0,gear="D",cameraMode=0,steerInput=0,driveStarted=false;const held={};let last=performance.now();
 let stickX=0,stickY=0,stickPointer=null;
 const stickPad=document.querySelector("#stickPad"),stickThumb=document.querySelector("#stickThumb");
 function moveStick(e){const r=stickPad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,limit=r.width*.34,len=Math.hypot(dx,dy),scale=len>limit?limit/len:1;stickX=THREE.MathUtils.clamp(dx*scale/limit,-1,1);stickY=THREE.MathUtils.clamp(dy*scale/limit,-1,1);stickThumb.style.left=(50+stickX*34)+"%";stickThumb.style.top=(50+stickY*34)+"%"}
@@ -82,8 +82,8 @@ const keyMap={ArrowLeft:"left",a:"left",ArrowRight:"right",d:"right",ArrowUp:"ac
 addEventListener("keydown",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key]){held[keyMap[key]]=true;e.preventDefault()}if(key==="r")setGear("R");if(key==="n")setGear("N");if(key==="f")setGear("D")});
 addEventListener("keyup",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key])held[keyMap[key]]=false});
 document.querySelector("#cameraBtn").onclick=()=>cameraMode=(cameraMode+1)%2;
-function reset(){speed=0;distance=0;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";setGear("D")}
-document.querySelector("#resetBtn").onclick=reset;
+function reset(){speed=0;distance=0;driveStarted=false;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";document.querySelector("#startDrive").style.display="inline-block";document.querySelector("#message").querySelector("small").textContent="Press START DRIVE, then use the touch controls below";setGear("D")}
+document.querySelector("#resetBtn").onclick=reset;document.querySelector("#startDrive").onclick=()=>{driveStarted=true;document.querySelector("#startDrive").style.display="none";document.querySelector("#message").querySelector("small").textContent="Use ACCEL, BACK, BRAKE and the steering pad";};
 function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.04);last=now;
  const throttle=(held.accelerate||stickY<-.22)&&gear!=="N"&&gear!=="R",reverse=held.reverse||(gear==="R"&&stickY>.22),braking=held.brake||held.handbrake||(stickY>.22&&gear!=="R"&&!held.reverse);
  if(reverse)speed-=15*dt;else if(throttle)speed+=22*dt;else speed*=Math.pow(.986,dt*60);
