@@ -48,7 +48,7 @@ onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remov
 <div class="stat">⚔️ Guards <span id="guards">0</span></div>
 <div class="stat">🧑 Warrior HP <span id="playerHp">100</span></div>
 </div>
-<section class="combat-panel" aria-label="Warrior combat controls">
+<div id="gamebox"><canvas id="view"></canvas><div id="hint">Drag to rotate camera · Tap a green pad to build</div><button class="btn" id="start" type="button">⚔️ START WAVE</button><section class="combat-panel" aria-label="Warrior touch controls">
 <div class="move-pad" id="movePad">
 <button data-dir="up" aria-label="Move forward">▲</button><button data-dir="left" aria-label="Move left">◀</button><button data-dir="down" aria-label="Move backward">▼</button><button data-dir="right" aria-label="Move right">▶</button>
 </div>
@@ -65,7 +65,6 @@ onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remov
 <button class="btn" id="repair">❤️ Repair · 30</button>
 <button class="btn" id="soldier">🛡️ Deploy Guard · 55</button>
 <button class="btn" id="fire">🎯 Fire Cannon</button>
-<button class="btn" id="start">⚔️ Start Wave</button>
 <button class="btn" id="restart">↻ Restart</button>
 </div>
 <p class="note">Gameplay: Defenses automatically attack enemies approaching the castle. Earn gold by defeating attackers and clearing waves. Build strategically, deploy guards, fire the command cannon, upgrade your castle, and survive all 10 waves. This game saves no cash value; gold is an in-game resource only.</p>
