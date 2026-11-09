@@ -27,7 +27,7 @@ onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remov
  <div class="stat">❤️ HP <b id="hp">100</b><span class="bar"><span id="hpbar"></span></span></div>
  <div class="stat">⚡ STAMINA <b id="stamina">100</b></div>
  <div class="stat">☠ ENEMIES <b id="kills">0</b>/<b id="target">5</b></div>
- <div class="stat">🏅 CLEARED <b id="cleared">0</b>/10</div>
+ <div class="stat">🏅 CLEARED <b id="cleared">0</b>/100</div><div class="stat">👥 SQUAD <b id="squadCount">5/5</b></div>
 </div>
 <div id="viewbox">
  <canvas id="view"></canvas>
@@ -75,6 +75,7 @@ let selectedMission=1,currentMission=1,scene,camera,renderer,clock,player,player
 let running=false,gameEnded=false,hp=100,stamina=100,kills=0,spawned=0,target=5,spawnTimer=0,attackCooldown=0,dodgeTimer=0,block=false,jumpVelocity=0,playerVelocity=new THREE.Vector3(),moveInput={x:0,y:0},lastFacing=1,damageFlash=0;
 let selectedWeapon='rifle',ammo=30,maxAmmo=30,grenadeCooldown=0,gamePoints=0;
 let locationGroup=null;
+let squadUnits=[];
 const locationStyles=[
  {sky:0x9baab1,fog:0x9baab1,ground:0x394b43,accent:0x6d7780,label:'PARAÑAQUE SKY WALL'},
  {sky:0x777f86,fog:0x777f86,ground:0x4b4a43,accent:0x554b47,label:'KABIHASNAN SMOKE ZONE'},
@@ -141,7 +142,7 @@ function buildWorld(){
  // Ruined defensive walls and towers
  for(let i=0;i<8;i++){const x=-17+(i%4)*11,z=i<4?-14:14;mesh(new THREE.BoxGeometry(3.8,2.8,1.2),mats.stone,scene,x,1.3,z);mesh(new THREE.BoxGeometry(4,.3,1.35),mats.dark,scene,x,2.8,z);for(let j=-1;j<=1;j++)mesh(new THREE.BoxGeometry(.4,.5,1.4),mats.stone,scene,x+j*1.2,3.15,z)}
  for(let i=0;i<24;i++){const x=(Math.random()-.5)*42,z=(Math.random()-.5)*38;if(Math.abs(x)<7&&Math.abs(z)<8)continue;const rock=mesh(new THREE.DodecahedronGeometry(.4+Math.random()*.65,0),mats.dark,scene,x,.25,z);rock.rotation.set(Math.random(),Math.random(),Math.random())}
- player=makeFighter(false);scene.add(player);player.position.set(0,0,8);
+ player=makeFighter(false);scene.add(player);player.position.set(0,0,8);squadUnits=[];for(let i=0;i<5;i++){const ally=makeFighter(false);scene.add(ally);ally.position.set(-3+(i%3)*3,0,11+Math.floor(i/3)*2);squadUnits.push({group:ally,cool:.4+i*.25,slot:i})}
  camera.position.set(0,7,15);clock=new THREE.Clock();resize();window.addEventListener('resize',resize);renderer.setAnimationLoop(tick);
 }
 function resize(){if(!renderer||!camera)return;const w=$('view').clientWidth,h=$('view').clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
@@ -150,7 +151,7 @@ function renderMissions(){const grid=$('missionGrid');grid.innerHTML='';missions
 function say(s){$('toast').textContent=s}
 function hud(){ $('hp').textContent=Math.max(0,Math.ceil(hp));$('hpbar').style.width=Math.max(0,hp)+'%';$('stamina').textContent=Math.floor(stamina);$('kills').textContent=kills;$('target').textContent=target;$('cleared').textContent=saved.cleared.length;$('progressLabel').textContent='MISSION '+String(currentMission).padStart(3,'0')+' / 100';$('weaponStatus').textContent=selectedWeapon.toUpperCase()+' · Ammo '+ammo+'/'+maxAmmo+' · Points '+gamePoints}
 function startMission(n=selectedMission){
- if(n>saved.unlocked||n<1||n>100)return;selectedMission=n;currentMission=n;const m=missions[n-1];buildMissionLocation(n);target=m.goal;hp=100;stamina=100;kills=0;spawned=0;spawnTimer=1;ammo=maxAmmo;running=true;gameEnded=false;attackCooldown=0;dodgeTimer=0;block=false;jumpVelocity=0;moveInput={x:0,y:0};player.position.set(0,0,8);player.rotation.set(0,0,0);
+ if(n>saved.unlocked||n<1||n>100)return;selectedMission=n;currentMission=n;const m=missions[n-1];buildMissionLocation(n);target=m.goal;hp=100;stamina=100;kills=0;spawned=0;spawnTimer=1;ammo=maxAmmo;running=true;gameEnded=false;attackCooldown=0;dodgeTimer=0;block=false;jumpVelocity=0;moveInput={x:0,y:0};player.position.set(0,0,8);player.rotation.set(0,0,0);squadUnits.forEach((u,i)=>{u.group.position.set(player.position.x-3+(i%3)*3,0,player.position.z+3+Math.floor(i/3)*2);u.cool=.5+i*.25});
  enemies.forEach(e=>scene.remove(e.group));enemies=[];effects.forEach(e=>scene.remove(e));effects=[];$('result').classList.add('hidden');$('startMission').textContent='↻ RESTART MISSION';$('retryMission').textContent='↻ RETRY';$('toast').textContent=m.name+' — '+m.desc;hud();renderMissions();
 }
 function spawnEnemy(){
@@ -173,6 +174,7 @@ function tick(){
   if(moving&&dodgeTimer<=0){const dir=new THREE.Vector3(moveInput.x,0,-moveInput.y).normalize();player.position.addScaledVector(dir,dt*5.4);player.rotation.y=Math.atan2(dir.x,dir.z)}
   player.position.x=THREE.MathUtils.clamp(player.position.x,-arenaBounds,arenaBounds);player.position.z=THREE.MathUtils.clamp(player.position.z,-arenaBounds,arenaBounds);
   if(jumpVelocity!==0||player.position.y>0){player.position.y+=jumpVelocity*dt;jumpVelocity-=14*dt;if(player.position.y<0){player.position.y=0;jumpVelocity=0}}
+  for(const u of squadUnits){const slot=u.slot,offsetX=-3+(slot%3)*3,offsetZ=3+Math.floor(slot/3)*2;const followX=player.position.x+offsetX,followZ=player.position.z+offsetZ;u.group.position.x+=(followX-u.group.position.x)*Math.min(1,dt*2.8);u.group.position.z+=(followZ-u.group.position.z)*Math.min(1,dt*2.8);u.cool-=dt;let prey=null,near=7;for(const e of enemies){const d=u.group.position.distanceTo(e.group.position);if(d<near){near=d;prey=e}}if(prey&&u.cool<=0){u.cool=1.35;const aim=new THREE.Vector3().subVectors(prey.group.position,u.group.position);u.group.rotation.y=Math.atan2(aim.x,aim.z);hitEnemy(prey,9)}}
   if(spawned<target){spawnTimer-=dt;if(spawnTimer<=0){spawnEnemy();spawnTimer=missions[currentMission-1].boss?999:Math.max(.55,1.8-currentMission*.07)}}
   for(const e of [...enemies]){
    const delta=new THREE.Vector3().subVectors(player.position,e.group.position);delta.y=0;const d=delta.length();if(d>1.65){delta.normalize();e.group.position.addScaledVector(delta,e.speed*dt);e.group.rotation.y=Math.atan2(delta.x,delta.z)}else{e.cool-=dt;if(e.cool<=0){e.cool=e.boss?1.15:1.35;if(!block&&dodgeTimer<=0){hp=Math.max(0,hp-e.damage);say(e.boss?'BOSS STRIKE! Dodge or block!':'Tinamaan ka! Gumamit ng dodge o block.');if(hp<=0)loseMission()}}}
@@ -183,7 +185,7 @@ function tick(){
  }
  for(const e of [...effects]){e.life-=dt;e.mesh.scale.multiplyScalar(1+dt*4);e.mesh.material.opacity=Math.max(0,e.life*3);if(e.life<=0){scene.remove(e.mesh);effects=effects.filter(x=>x!==e)}}
  if(player){const targetCam=new THREE.Vector3(player.position.x,player.position.y+6.3,player.position.z+10.5);camera.position.lerp(targetCam,.09);camera.lookAt(player.position.x,player.position.y+1.1,player.position.z-1.5)}
- renderer.render(scene,camera);
+ $('squadCount').textContent=squadUnits.length+'/5';renderer.render(scene,camera);
 }
 function winMission(){if(gameEnded)return;gameEnded=true;running=false;if(!saved.cleared.includes(currentMission))saved.cleared.push(currentMission);saved.cleared.sort((a,b)=>a-b);saved.unlocked=Math.max(saved.unlocked,Math.min(100,currentMission+1));save();hud();renderMissions();$('resultKicker').textContent='MISSION '+String(currentMission).padStart(3,'0')+' COMPLETE';$('resultTitle').textContent=currentMission===100?'THE CITY IS SAVED!':'SECTOR SECURED!';$('resultText').textContent='Natalo mo ang lahat ng kalaban sa '+missions[currentMission-1].sector+'. Na-unlock na ang susunod na mission!';$('nextMission').classList.toggle('hidden',currentMission===100);$('retryMission').textContent='PLAY AGAIN';$('result').classList.remove('hidden');say('Mission complete! Progress saved on this device.')}
 function loseMission(){if(gameEnded)return;gameEnded=true;running=false;$('resultKicker').textContent='MISSION FAILED';$('resultTitle').textContent='BUMAGSAK ANG DEPENSA';$('resultText').textContent='Subukan ulit. Gumamit ng dodge, jump at block para makaiwas sa attacks.';$('nextMission').classList.add('hidden');$('retryMission').textContent='↻ RETRY MISSION';$('result').classList.remove('hidden')}
