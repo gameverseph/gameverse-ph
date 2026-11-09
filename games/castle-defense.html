@@ -30,9 +30,10 @@ h1{font-size:clamp(22px,4vw,34px);margin:8px 0;color:#f1d49b}.sub{color:#aeb8c1;
 <style>html.gv-auth-check body{visibility:hidden!important}</style>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getAuth,onAuthStateChanged,setPersistence,browserLocalPersistence} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyCeMwYBG6AVch8CXr-Y4ngcp9cmWtqsruU",authDomain:"gameverse-102213.firebaseapp.com",databaseURL:"https://gameverse-102213-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"gameverse-102213",storageBucket:"gameverse-102213.firebasestorage.app",messagingSenderId:"87748222074",appId:"1:87748222074:web:ef7757ff1df09e84006fc3",measurementId:"G-548P0BBQM4"};
 const auth=getAuth(initializeApp(firebaseConfig));
+await setPersistence(auth,browserLocalPersistence).catch(err=>console.error("Auth persistence setup failed:",err));
 onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remove("gv-auth-check")}else{location.replace("../?login=required")}});
 </script>
 </head><body>
