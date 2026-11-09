@@ -187,13 +187,16 @@ function joyMove(e){const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r
 joy.addEventListener('pointerdown',e=>{e.preventDefault();joyId=e.pointerId;joy.setPointerCapture(joyId);joyMove(e)});
 joy.addEventListener('pointermove',e=>{if(e.pointerId===joyId)joyMove(e)});
 function joyEnd(e){if(e.pointerId!==joyId)return;joyId=null;moveInput={x:0,y:0};stick.style.transform='translate(0,0)'}
-joy.addEventListener('pointerup',joyEnd);joy.addEventListener('pointercancel',joyEnd);
+joy.addEventListener('pointerup',joyEnd);joy.addEventListener('pointercancel',joyEnd);joy.addEventListener('lostpointercapture',joyEnd);
 $('startMission').onclick=()=>startMission(selectedMission);
 $('retryMission').onclick=()=>startMission(currentMission);
 $('nextMission').onclick=()=>{selectedMission=Math.min(10,currentMission+1);startMission(selectedMission)};
 $('resetProgress').onclick=()=>{if(confirm('I-reset ang campaign progress sa device na ito?')){saved={unlocked:1,cleared:[]};save();selectedMission=1;renderMissions();hud();say('Campaign progress reset.')}};
-document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')moveInput.x=-1;if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')moveInput.x=1;if(e.key==='ArrowUp'||e.key.toLowerCase()==='w')moveInput.y=1;if(e.key==='ArrowDown'||e.key.toLowerCase()==='s')moveInput.y=-1;if(e.code==='Space'){e.preventDefault();attack()}if(e.key.toLowerCase()==='j')jump();if(e.key.toLowerCase()==='k')dodge()});
-document.addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight','a','d'].includes(e.key))moveInput.x=0;if(['ArrowUp','ArrowDown','w','s'].includes(e.key))moveInput.y=0});
+const pressedKeys=new Set();
+function syncKeyboardMove(){const left=pressedKeys.has('ArrowLeft')||pressedKeys.has('a'),right=pressedKeys.has('ArrowRight')||pressedKeys.has('d'),up=pressedKeys.has('ArrowUp')||pressedKeys.has('w'),down=pressedKeys.has('ArrowDown')||pressedKeys.has('s');moveInput.x=(right?1:0)-(left?1:0);moveInput.y=(up?1:0)-(down?1:0)}
+document.addEventListener('keydown',e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(key))e.preventDefault();pressedKeys.add(key);syncKeyboardMove();if(e.repeat)return;if(e.code==='Space')attack();if(key==='j')jump();if(key==='k')dodge()});
+document.addEventListener('keyup',e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;pressedKeys.delete(key);syncKeyboardMove()});
+window.addEventListener('blur',()=>{pressedKeys.clear();syncKeyboardMove();setBlock(false)});
 buildWorld();renderMissions();selectedMission=Math.min(saved.unlocked,10);renderMissions();hud();say('Piliin ang mission at START MISSION. Joystick: move · Sword: attack · Dodge/Jump/Block: survive.');
 </script>
 </body></html>

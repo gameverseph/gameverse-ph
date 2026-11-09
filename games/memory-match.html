@@ -1,24 +1,50 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#00ff88"><title>Memory Match | GAMEVERSE PH</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#00ff88"><title>Matching Mind | GAMEVERSE PH</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#090914;color:#fff;font:16px Arial,sans-serif;min-height:100vh;padding:20px}
-header,.wrap{max-width:760px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px}
-a,.btn{background:#00ef88;color:#06130c;border:0;border-radius:9px;padding:10px 15px;font-weight:800;text-decoration:none;cursor:pointer}
-h1{color:#00ef88;margin:8px 0}.panel{background:#17172a;border:1px solid #30304a;border-radius:16px;padding:20px;margin:14px 0;text-align:center}
-button{font:inherit}.muted{color:#aaa}.score{font-size:20px;color:#00ef88;font-weight:800;margin:12px}
-.grid{display:grid;gap:8px;justify-content:center;margin:16px auto}.cell{background:#292943;border:1px solid #454566;border-radius:8px;display:grid;place-items:center;min-width:48px;min-height:48px;font-size:22px;font-weight:800;color:white;cursor:pointer}
-input{padding:10px;border-radius:8px;border:0;max-width:100%}
-@media(max-width:500px){body{padding:12px}.panel{padding:14px}.cell{min-width:42px;min-height:42px}}
-</style><script>document.documentElement.classList.add("gv-auth-check");</script>
-<style>html.gv-auth-check body{visibility:hidden!important}</style>
+*{box-sizing:border-box}body{margin:0;background:#090914;color:#fff;font:16px Arial,sans-serif;min-height:100vh;padding:16px}
+header,.wrap{max-width:850px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+a,.btn,button{font:inherit}a,.btn{background:#00ef88;color:#06130c;border:0;border-radius:9px;padding:10px 14px;font-weight:800;text-decoration:none;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}h1{color:#00ef88;margin:8px 0}.muted{color:#aaa;line-height:1.5}
+.panel{background:#17172a;border:1px solid #30304a;border-radius:16px;padding:18px;margin:12px 0;text-align:center}
+.levels{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}.levels button,.tools button{background:#292943;color:#fff;border:1px solid #454566;border-radius:9px;padding:10px 12px;font-weight:750}
+.levels button.active{background:#00ef88;color:#06130c;border-color:#00ef88}
+.hud{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0}.stat{background:#101020;border:1px solid #30304a;border-radius:10px;padding:10px}.stat small{display:block;color:#aaa;font-size:12px}.stat b{display:block;color:#00ef88;font-size:21px;margin-top:4px}
+.grid{display:grid;gap:8px;justify-content:center;margin:16px auto;max-width:100%;touch-action:manipulation}
+.cell{aspect-ratio:1;min-width:0;min-height:44px;background:linear-gradient(145deg,#323254,#22223a);border:1px solid #56567b;border-radius:10px;display:grid;place-items:center;font-size:clamp(20px,5vw,36px);font-weight:800;color:white;cursor:pointer;box-shadow:0 4px 0 #111120;transition:transform .12s,background .12s}
+.cell.open,.cell.matched{background:#164a3b;border-color:#00ef88;transform:translateY(2px);box-shadow:0 2px 0 #0a241c}.cell.matched{opacity:.72}
+.tools{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0}.tools .primary{background:#00ef88;color:#06130c;border-color:#00ef88}
+#status{min-height:25px;color:#f6d58d;font-weight:750;margin:10px 0}.note{font-size:12px;color:#999}
+@media(max-width:540px){body{padding:10px}.panel{padding:12px}.hud{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{gap:6px}.cell{border-radius:7px}}
+</style>
+<script>document.documentElement.classList.add("gv-auth-check");</script><style>html.gv-auth-check body{visibility:hidden!important}</style>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyCeMwYBG6AVch8CXr-Y4ngcp9cmWtqsruU",authDomain:"gameverse-102213.firebaseapp.com",databaseURL:"https://gameverse-102213-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"gameverse-102213",storageBucket:"gameverse-102213.firebasestorage.app",messagingSenderId:"87748222074",appId:"1:87748222074:web:ef7757ff1df09e84006fc3",measurementId:"G-548P0BBQM4"};
 const auth=getAuth(initializeApp(firebaseConfig));
 onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remove("gv-auth-check")}else{location.replace("../?login=required")}});
-</script>
-</head><body><header><b style="color:#00ef88;font-size:22px">GAMEVERSE PH</b><a href="../index.html">← Game Lobby</a></header><main class="wrap"><section class="panel"><h1>Memory Match</h1><p class="muted">Play for fun • Earn practice points</p><div class="score" id="status">Find all matching pairs</div><div id="board" class="grid" style="grid-template-columns:repeat(4,64px)"></div><button class="btn" onclick="init()">Restart</button><p>Moves: <b id="moves">0</b> • Practice points: <b id="points">0</b></p></section></main><script>
-function award(points){let total=Number(localStorage.getItem('gv_points')||0)+points;localStorage.setItem('gv_points',total);let el=document.getElementById('points');if(el)el.textContent=total;}
-const icons=['🍉','🚀','🐼','⭐','🎮','🍀','⚽','🔥'];let cards,first,lock,moves,matched;function init(){cards=[...icons,...icons].sort(()=>Math.random()-.5);first=null;lock=false;moves=0;matched=0;document.getElementById('moves').textContent=0;render()}function render(){let el=document.getElementById('board');el.innerHTML='';cards.forEach((v,i)=>{let b=document.createElement('button');b.className='cell';b.style.height='64px';b.textContent=matched.includes(i)||first===i? v:'?';b.onclick=()=>flip(i);el.appendChild(b)})}function flip(i){if(lock||matched.includes(i)||first===i)return;if(first===null){first=i;render();return}moves++;document.getElementById('moves').textContent=moves;if(cards[first]===cards[i]){matched.push(first,i);first=null;if(matched.length===16){document.getElementById('status').textContent='You matched them all!';award(10)}}else{let prev=first;first=i;lock=true;render();setTimeout(()=>{first=null;lock=false;render()},700);return}render()}init();
+</script></head>
+<body><header><b style="color:#00ef88;font-size:22px">GAMEVERSE PH</b><a href="../index.html">← Game Lobby</a></header>
+<main class="wrap"><section class="panel">
+<h1>🧠 Matching Mind</h1><p class="muted">Hanapin ang lahat ng magkaparehong cards bago maubos ang oras. Mas mahirap ang bawat level!</p>
+<div class="levels" id="levelSelect"><button data-level="1" class="active">Level 1</button><button data-level="2">Level 2</button><button data-level="3">Level 3</button><button data-level="4">Level 4</button><button data-level="5">Level 5</button><button data-level="6">Level 6</button><button data-level="7">Level 7</button><button data-level="8">Level 8</button><button data-level="9">Level 9</button><button data-level="10">Level 10</button></div>
+<div class="hud"><div class="stat"><small>⏱ TIME LEFT</small><b id="time">100s</b></div><div class="stat"><small>👣 MOVES</small><b id="moves">0</b></div><div class="stat"><small>🧩 PAIRS</small><b id="pairs">0/8</b></div><div class="stat"><small>⭐ PRACTICE POINTS</small><b id="points">0</b></div></div>
+<div id="status" role="status">Pindutin ang Start Game para magsimula.</div><div id="board" class="grid" aria-label="Matching cards"></div>
+<div class="tools"><button class="primary" id="start">▶ Start Game</button><button id="pause" disabled>Ⅱ Pause</button><button id="resume" disabled>▶ Resume</button><button id="restart">↻ Restart</button><button class="primary" id="next" disabled>Next Level →</button></div>
+<p class="note">Practice points lamang ito at hindi cash. Isang beses lang ang reward kada level sa account na ito sa browser na ito.</p>
+</section></main>
+<script>
+const icons=['🍉','🚀','🐼','⭐','🎮','🍀','⚽','🔥','🦊','🌙','🎯','🐉','🍓','🛡️','👑','🌈','🐸','💎','🦁','🎲','🍕','🪐','🦄','⚡','🎧','🏆','🌻','🧸','🧩','🚗'];
+const $=id=>document.getElementById(id);
+let level=1,cards=[],first=null,lock=false,moves=0,matched=0,seconds=100,clock=null,started=false,paused=false,finished=false,points=Number(localStorage.getItem('gv_points')||0);
+function config(n){const pairs=Math.min(15,7+Math.ceil(n/2));return {pairs,cols:n<3?4:n<6?5:6,seconds:Math.max(45,110-n*5)}}
+function stopClock(){if(clock){clearInterval(clock);clock=null}}
+function updateHud(){const cfg=config(level);$('time').textContent=seconds+'s';$('moves').textContent=moves;$('pairs').textContent=matched+'/'+cfg.pairs;$('points').textContent=points;document.querySelectorAll('#levelSelect button').forEach(b=>b.classList.toggle('active',Number(b.dataset.level)===level))}
+function startGame(){stopClock();const cfg=config(level);seconds=cfg.seconds;moves=0;matched=0;first=null;lock=false;started=true;paused=false;finished=false;const chosen=icons.slice(0,cfg.pairs);cards=[...chosen,...chosen].sort(()=>Math.random()-.5).map((icon,index)=>({icon,index,open:false,matched:false}));$('board').style.gridTemplateColumns='repeat('+cfg.cols+',minmax(0,1fr))';$('status').textContent='Level '+level+': Hanapin ang '+cfg.pairs+' pairs!';$('start').disabled=true;$('pause').disabled=false;$('resume').disabled=true;$('next').disabled=true;render();updateHud();clock=setInterval(()=>{if(!paused&&!finished){seconds--;updateHud();if(seconds<=0)endGame(false)}},1000)}
+function render(){const board=$('board');board.innerHTML='';cards.forEach((card,i)=>{const b=document.createElement('button');b.className='cell'+(card.open?' open':'')+(card.matched?' matched':'');b.type='button';b.textContent=card.open||card.matched?card.icon:'?';b.setAttribute('aria-label',card.open||card.matched?'Card '+card.icon:'Hidden card');b.disabled=!started||paused||finished||card.matched||card.open;b.addEventListener('click',()=>flip(i));board.appendChild(b)})}
+function flip(i){if(!started||paused||finished||lock||cards[i].matched||cards[i].open)return;cards[i].open=true;moves++;if(first===null){first=i;render();updateHud();return}const previous=first;first=null;if(cards[previous].icon===cards[i].icon){cards[previous].matched=true;cards[i].matched=true;matched++;render();updateHud();if(matched===config(level).pairs)endGame(true);return}lock=true;render();updateHud();setTimeout(()=>{if(!paused&&!finished){cards[previous].open=false;cards[i].open=false;render()}lock=false},750)}
+function endGame(won){stopClock();finished=true;started=false;$('start').disabled=false;$('pause').disabled=true;$('resume').disabled=true;if(won){const key='gv_matching_mind_reward_level_'+level;let reward=0;if(!localStorage.getItem(key)){reward=10+level*2;points+=reward;localStorage.setItem('gv_points',String(points));localStorage.setItem(key,'claimed')}$('status').textContent='🎉 Level '+level+' cleared! '+(reward?'+'+reward+' practice points!':'Reward already claimed for this level.');$('next').disabled=level>=10; }else{$('status').textContent='⏰ Time is up! Try again and beat the clock.';$('next').disabled=true}render();updateHud()}
+$('start').onclick=startGame;$('restart').onclick=startGame;$('pause').onclick=()=>{if(!started)return;paused=true;$('pause').disabled=true;$('resume').disabled=false;$('status').textContent='Game paused.';render()};$('resume').onclick=()=>{if(!started)return;paused=false;$('pause').disabled=false;$('resume').disabled=true;$('status').textContent='Game resumed. Good luck!';render()};
+$('next').onclick=()=>{if(level>=10||!finished)return;level++;startGame()};$('levelSelect').querySelectorAll('button').forEach(b=>b.onclick=()=>{level=Number(b.dataset.level);startGame()});
+updateHud();$('board').style.gridTemplateColumns='repeat(4,minmax(0,1fr))';$('status').textContent='Piliin ang level at pindutin ang Start Game.';$('points').textContent=points;
 </script></body></html>
