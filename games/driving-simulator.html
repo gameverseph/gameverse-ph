@@ -16,7 +16,7 @@
 @media(max-width:600px){.stick-wrap{width:112px;height:112px;left:10px;bottom:12px}.stick-pad{width:104px;height:104px}.stick-thumb{width:44px;height:44px}}
 .center{position:fixed;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;text-shadow:0 2px 8px #000}.center strong{font-size:clamp(20px,4vw,34px);color:#fff}.center small{display:block;color:#cde3ef;margin-top:6px}
 .gearbox{position:fixed;z-index:4;right:14px;bottom:105px;display:flex;gap:5px}.gear{background:#132438;color:#fff;border:1px solid #5b7182;border-radius:8px;padding:9px 12px;font-weight:bold}.gear.active{background:#00d88b;color:#04130d}
-.speed{position:fixed;z-index:4;left:50%;bottom:106px;transform:translateX(-50%);background:#07111ddd;border:1px solid #426078;border-radius:14px;padding:8px 18px;text-align:center;min-width:115px}.speed b{font-size:27px;color:#00f5a0}.speed small{display:block;color:#a9c1cf;font-size:10px}
+.speed{position:fixed;z-index:4;left:50%;bottom:106px;transform:translateX(-50%);background:#07111ddd;border:1px solid #426078;border-radius:14px;padding:8px 18px;text-align:center;min-width:115px}.speed b{font-size:27px;color:#00f5a0}.speed small{display:block;color:#a9c1cf;font-size:10px}.drive-start{position:fixed;z-index:8;left:50%;top:50%;transform:translate(-50%,-50%);border:2px solid #b8ffe0;border-radius:16px;padding:16px 26px;background:#087b53;color:#fff;font-size:18px;font-weight:900;box-shadow:0 8px 30px #000b;touch-action:manipulation}.drive-start:active{transform:translate(-50%,-50%) scale(.96)}
 @media(max-width:600px){.control{width:58px;height:58px;border-radius:15px}.control.big{width:68px;height:68px}.pill{font-size:10px;padding:7px 8px}.speed{bottom:99px}.gearbox{bottom:100px}}
 </style>
 </head>
@@ -24,7 +24,7 @@
 <div id="scene"></div>
 <div class="hud"><div class="pill">GAMEVERSE PH <b>DRIVE</b></div><div class="pill">DISTANCE <b id="distance">0 m</b></div><div class="pill">MODE <b id="mode">FREE DRIVE</b></div></div>
 <div class="topright"><button class="ui-btn" id="cameraBtn">CAMERA</button><button class="ui-btn" id="resetBtn">RESET</button><a class="ui-btn" href="../" style="text-decoration:none">LOBBY</a></div>
-<div class="center" id="message"><strong>3D DRIVING SIMULATOR</strong><small>Accelerate to start your drive</small></div>
+<div class="center" id="message"><strong>3D DRIVING SIMULATOR</strong><small>Pindutin ang START DRIVE para magsimula</small></div><button class="drive-start" id="startDrive">▶ START DRIVE</button>
 <div class="speed"><b id="speed">0</b><small>KM/H</small></div>
 <div class="gearbox"><button class="gear active" data-gear="D">D</button><button class="gear" data-gear="N">N</button><button class="gear" data-gear="R">R</button></div>
 <div class="stick-wrap" id="stickWrap" aria-label="Drag steering and drive control"><div class="stick-label">DRAG TO STEER / DRIVE</div><div class="stick-pad" id="stickPad"><div class="stick-thumb" id="stickThumb"></div></div></div>
@@ -66,7 +66,7 @@ const car=makeCar();car.position.set(0,0,8);
 const trees=[];
 for(let z=28;z>-390;z-=13)for(const side of [-1,1]){const x=side*(12+Math.random()*9);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.22,.32,2,7),mat(0x65452d));trunk.position.set(x,1,z-Math.random()*8);scene.add(trunk);const crown=new THREE.Mesh(new THREE.ConeGeometry(1.7,4.2,8),mat(0x1d603b));crown.position.set(x,3.8,trunk.position.z);crown.castShadow=true;scene.add(crown);trees.push({trunk,crown})}
 const obstacles=[];for(let i=0;i<12;i++){const o=box(1.5,.9,1.5,0xd18a22,(Math.random()-.5)*8,.45,-30-i*27);obstacles.push(o)}
-let speed=0,steer=0,distance=0,gear="D",cameraMode=0,steerInput=0;const held={};let last=performance.now();
+let speed=0,steer=0,distance=0,gear="D",cameraMode=0,steerInput=0,driveStarted=false;const held={};let last=performance.now();
 let stickX=0,stickY=0,stickPointer=null;
 const stickPad=document.querySelector("#stickPad"),stickThumb=document.querySelector("#stickThumb");
 function moveStick(e){const r=stickPad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,limit=r.width*.34,len=Math.hypot(dx,dy),scale=len>limit?limit/len:1;stickX=THREE.MathUtils.clamp(dx*scale/limit,-1,1);stickY=THREE.MathUtils.clamp(dy*scale/limit,-1,1);stickThumb.style.left=(50+stickX*34)+"%";stickThumb.style.top=(50+stickY*34)+"%"}
@@ -81,15 +81,15 @@ const reverseBtn=document.querySelector("#reverseBtn");const reverseOn=e=>{e.pre
 const keyMap={ArrowLeft:"left",a:"left",ArrowRight:"right",d:"right",ArrowUp:"accelerate",w:"accelerate",ArrowDown:"brake",s:"brake"," ":"handbrake"};
 addEventListener("keydown",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key]){held[keyMap[key]]=true;e.preventDefault()}if(key==="r")setGear("R");if(key==="n")setGear("N");if(key==="f")setGear("D")});
 addEventListener("keyup",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key])held[keyMap[key]]=false});
-document.querySelector("#cameraBtn").onclick=()=>cameraMode=(cameraMode+1)%2;
-function reset(){speed=0;distance=0;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";setGear("D")}
+document.querySelector("#cameraBtn").onclick=()=>cameraMode=(cameraMode+1)%2;document.querySelector("#startDrive").onclick=()=>{driveStarted=true;document.querySelector("#startDrive").style.display="none";document.querySelector("#message").style.display="none";};
+function reset(){speed=0;distance=0;driveStarted=false;held.accelerate=false;held.reverse=false;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";document.querySelector("#startDrive").style.display="block";setGear("D")}
 document.querySelector("#resetBtn").onclick=reset;
 function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.04);last=now;
- const throttle=(held.accelerate||stickY<-.22)&&gear!=="N"&&gear!=="R",reverse=held.reverse||(gear==="R"&&stickY>.22),braking=held.brake||held.handbrake||(stickY>.22&&gear!=="R"&&!held.reverse);
+ const throttle=driveStarted&&(held.accelerate||stickY<-.22)&&gear!=="N"&&gear!=="R",reverse=driveStarted&&(held.reverse||(gear==="R"&&stickY>.22)),braking=held.brake||held.handbrake||(stickY>.22&&gear!=="R"&&!held.reverse);
  if(reverse)speed-=15*dt;else if(throttle)speed+=22*dt;else speed*=Math.pow(.986,dt*60);
  if(braking)speed*=Math.pow(held.handbrake?.88:.91,dt*60);
  speed=THREE.MathUtils.clamp(speed,-35,160);
- const direction=THREE.MathUtils.clamp((held.left?-1:0)+(held.right?1:0)+stickX,-1,1);steer=THREE.MathUtils.damp(steer,direction,5,dt);
+ const direction=driveStarted?THREE.MathUtils.clamp((held.left?-1:0)+(held.right?1:0)+stickX,-1,1):0;steer=THREE.MathUtils.damp(steer,direction,5,dt);
  const movement=speed/3.6;car.position.z-=movement*dt;car.position.x+=steer*movement*.42*dt;car.position.x=THREE.MathUtils.clamp(car.position.x,-5.3,5.3);car.rotation.y=-steer*Math.min(Math.abs(movement)/18,1)*.22;
  distance+=Math.abs(movement)*dt;document.querySelector("#speed").textContent=Math.round(Math.abs(speed));document.querySelector("#distance").textContent=Math.floor(distance)+" m";
  obstacles.forEach(o=>{if(o.position.z>car.position.z+20)o.position.z-=330;if(Math.abs(o.position.z-car.position.z)<2.2&&Math.abs(o.position.x-car.position.x)<1.6){speed*=.96}});
