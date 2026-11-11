@@ -15,7 +15,7 @@ h1{font-size:clamp(22px,4vw,34px);margin:8px 0;color:#f1d49b}.sub{color:#aeb8c1;
 #message{min-height:24px;color:#f5d28f;padding:10px 2px;font-size:13px}
 .toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .toolbar button{min-height:48px;font-size:12px;padding:8px 5px}.toolbar button.active{outline:3px solid #f6d58d;background:#e2b765}.toolbar button:disabled{opacity:.45;cursor:not-allowed}
-#start{background:#4d9c75;color:#07160e;border-color:#83c9a3}#restart{background:#596979;color:#fff}
+#start,#startDefense{background:#4d9c75;color:#07160e;border-color:#83c9a3}#startDefense{box-shadow:0 4px 16px #0008;cursor:pointer}#startDefense:disabled{opacity:.5;cursor:not-allowed}#restart{background:#596979;color:#fff}
 .note{font-size:12px;color:#9eabb6;line-height:1.5;margin:12px 2px}
 .combat-panel{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:#172431;border:1px solid #465968;border-radius:12px;padding:12px;margin:10px 0}
 .move-pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,44px);gap:5px;justify-content:center;touch-action:none}
@@ -39,7 +39,7 @@ onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remov
 </head><body>
 <header><b>🏰 GAMEVERSE PH · 3D SIEGE</b><a href="../index.html">← Lobby</a></header>
 <main>
-<div class="intro"><div><h1>Castle Siege: Kingdom Defense</h1><p class="sub">Build your fortress. Command your defenses. Survive the siege.</p></div><div class="stat">3D REAL-TIME STRATEGY</div></div>
+<div class="intro"><div><h1>Castle Siege: Kingdom Defense</h1><p class="sub">Build your fortress. Command your defenses. Survive the siege.</p></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><div class="stat">3D REAL-TIME STRATEGY</div><button class="btn" id="startDefense" type="button" style="font-size:16px;min-height:48px;background:#4d9c75;color:#07160e;border:2px solid #83c9a3">⚔️ START DEFENSE</button></div></div>
 <div class="hud">
 <div class="stat">❤️ Castle <span id="hp">100</span>/<span id="maxhp">100</span></div>
 <div class="stat">🪙 Gold <span id="gold">150</span></div>
@@ -132,7 +132,7 @@ function place(p){if(!selected||gameOver)return;if(buildings.some(b=>b.x===p.x&&
 function choose(t){if(gameOver)return;if(gold<prices[t]){say('Not enough gold for this defense.');return}selected=selected===t?null:t;document.querySelectorAll('.toolbar .btn').forEach(b=>b.classList.remove('active'));if(selected)$ (t).classList.add('active');say(selected?'Tap a green build pad to place your '+t+'.':'Build selection cancelled.')}
 function say(s){$('message').textContent=s}
 function updateHud(){$('playerHp').textContent=Math.max(0,Math.ceil(warriorHp));$('hp').textContent=Math.max(0,Math.ceil(hp));$('maxhp').textContent=maxHp;$('gold').textContent=gold;$('wave').textContent=wave;$('kills').textContent=kills;$('built').textContent=buildings.length;$('guards').textContent=guards.length}
-function startWave(){if(gameOver||spawning||enemies.length||wave>=10)return;wave++;spawnLeft=5+wave*2;spawning=true;spawnClock=0;cleared=false;$('start').disabled=true;say('Wave '+wave+'! Enemy troops are marching toward your castle.');updateHud()}
+function startWave(){if(gameOver||spawning||enemies.length||wave>=10)return;wave++;spawnLeft=5+wave*2;spawning=true;spawnClock=0;cleared=false;$('start').disabled=true;$('startDefense').disabled=true;$('startDefense').textContent='⚔️ WAVE '+wave+' STARTED';say('Wave '+wave+'! Enemy troops are marching toward your castle.');updateHud()}
 function spawn(){const boss=wave===10&&spawnLeft===1,heavy=boss||(wave>2&&Math.random()<.28),health=boss?38:heavy?5+wave:2+Math.floor(wave/2),mesh=new THREE.Group();const body=cylinder(.36,.42,1.05,heavy?mats.dark:mats.red,0,.75,0,mesh,8);cylinder(.24,.24,.42,mats.gold,0,1.5,0,mesh,8);const head=cylinder(.25,.25,.35,mats.red,0,1.9,0,mesh,8);box(.12,.5,.12,mats.steel,.4,1,0,mesh);mesh.scale.setScalar(boss?1.9:1);mesh.position.set(22,0,(Math.random()-.5)*2.6);scene.add(mesh);enemies.push({mesh,hp:health,max:health,speed:boss?.72:heavy?1.05:1.55+wave*.08,heavy,boss,hit:0})}
 function projectile(from,target,type){const mesh=new THREE.Mesh(new THREE.SphereGeometry(type==='cannon'?.22:.11,8,8),new THREE.MeshStandardMaterial({color:type==='cannon'?0xff8a32:0xffe39a,emissive:type==='cannon'?0x9b2d00:0x8a651e}));mesh.position.set(from.x,from.y+1.7,from.z);scene.add(mesh);bolts.push({mesh,target,damage:type==='cannon'?3:1,speed:type==='cannon'?15:23,splash:type==='cannon'?2.5:0})}
 function hitEnemy(e,dmg){e.hp-=dmg;if(e.hp<=0){gold+=e.boss?100:12;kills++;scene.remove(e.mesh);enemies=enemies.filter(x=>x!==e);if(e.boss)say('Boss defeated! The enemy commander is down.')}}
@@ -145,10 +145,10 @@ for(const e of [...enemies]){if(warrior&&warrior.position.distanceTo(e.mesh.posi
 for(const b of buildings){if(b.type==='wall')continue;b.cool-=dt;if(b.cool<=0){let target=null,dist=b.type==='cannon'?13:10;for(const e of enemies){const d=e.mesh.position.distanceTo(new THREE.Vector3(b.x,0,b.z));if(d<dist){dist=d;target=e}}if(target){projectile({x:b.x,y:1.7,z:b.z},target,b.type);b.cool=b.type==='cannon'?1.45:.62}}}
 for(const fx of [...effects]){fx.life-=dt;fx.mesh.scale.multiplyScalar(1+dt*4);fx.mesh.material.opacity=Math.max(0,fx.life*1.8);if(fx.life<=0){scene.remove(fx.mesh);effects=effects.filter(v=>v!==fx)}}
 for(const q of [...bolts]){if(!q.target||!enemies.includes(q.target)){scene.remove(q.mesh);bolts=bolts.filter(x=>x!==q);continue}const dest=q.target.mesh.position.clone().add(new THREE.Vector3(0,1.4,0));const delta=dest.sub(q.mesh.position),len=delta.length(),step=q.speed*dt;if(len<step){const target=q.target,point=target.mesh.position.clone();hitEnemy(target,q.damage);if(q.splash)for(const other of [...enemies])if(other.mesh.position.distanceTo(point)<q.splash)hitEnemy(other,2);scene.remove(q.mesh);bolts=bolts.filter(x=>x!==q)}else q.mesh.position.add(delta.normalize().multiplyScalar(step))}
-if(warriorHp<=0){gameOver=true;$('start').disabled=true;say('Your warrior has fallen. Restart to try again.')}
-if(hp<=0){hp=0;gameOver=true;$('start').disabled=true;say('The castle has fallen. Press Restart to try again.')}
-if(!spawning&&enemies.length===0&&!cleared&&wave>0&&!gameOver){cleared=true;gold+=25;$('start').disabled=false;say(wave===10?'VICTORY! You survived all 10 waves! +25 gold.':'Wave '+wave+' cleared! +25 gold. Prepare for the next attack.')}
-if(wave>=10&&cleared)$('start').disabled=true;updateHud()}
+if(warriorHp<=0){gameOver=true;$('start').disabled=true;$('startDefense').disabled=true;say('Your warrior has fallen. Restart to try again.')}
+if(hp<=0){hp=0;gameOver=true;$('start').disabled=true;$('startDefense').disabled=true;say('The castle has fallen. Press Restart to try again.')}
+if(!spawning&&enemies.length===0&&!cleared&&wave>0&&!gameOver){cleared=true;gold+=25;$('start').disabled=false;$('startDefense').disabled=false;$('startDefense').textContent='⚔️ START NEXT WAVE';say(wave===10?'VICTORY! You survived all 10 waves! +25 gold.':'Wave '+wave+' cleared! +25 gold. Prepare for the next attack.')}
+if(wave>=10&&cleared){$('start').disabled=true;$('startDefense').disabled=true;$('startDefense').textContent='🏆 ALL WAVES CLEARED';}updateHud()}
 renderer.render(scene,camera)}
 function restart(){location.reload()}
 $('archer').onclick=()=>choose('archer');$('cannon').onclick=()=>choose('cannon');$('wall').onclick=()=>choose('wall');
@@ -157,5 +157,5 @@ const heldDirections=new Set();function syncMovePad(){moveVector.x=(heldDirectio
 window.addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault()});window.addEventListener('keyup',e=>{keys[e.key]=false});
 $('upgrade').onclick=()=>{if(gold<90)return say('Upgrade costs 90 gold.');gold-=90;maxHp+=35;hp=Math.min(maxHp,hp+35);updateHud();say('Castle upgraded! +35 maximum health.')};
 $('repair').onclick=()=>{if(hp>=maxHp)return say('Castle health is already full.');if(gold<30)return say('Repair costs 30 gold.');gold-=30;hp=Math.min(maxHp,hp+35);updateHud();say('Castle repaired by up to 35 health.')};
-$('soldier').onclick=deployGuard;$('fire').onclick=fireCommandCannon;$('start').onclick=startWave;$('restart').onclick=restart;init();updateHud();
+$('soldier').onclick=deployGuard;$('fire').onclick=fireCommandCannon;$('start').onclick=startWave;$('startDefense').onclick=startWave;$('restart').onclick=restart;init();updateHud();
 </script></body></html>
