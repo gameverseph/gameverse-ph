@@ -18,15 +18,16 @@
 .speed{position:fixed;z-index:4;left:50%;bottom:106px;transform:translateX(-50%);background:#07111ddd;border:1px solid #426078;border-radius:14px;padding:8px 18px;text-align:center;min-width:115px}.speed b{font-size:27px;color:#00f5a0}.speed small{display:block;color:#a9c1cf;font-size:10px}
 @media(max-width:600px){.control{width:58px;height:58px;border-radius:15px}.control.big{width:68px;height:68px}.pill{font-size:10px;padding:7px 8px}.speed{bottom:99px}.gearbox{bottom:100px}}
 
-.mission-banner{position:fixed;z-index:4;left:50%;top:68px;transform:translateX(-50%);background:#07111ddd;border:1px solid #00e99a;border-radius:12px;padding:8px 14px;text-align:center;min-width:190px;pointer-events:none}.mission-banner b{color:#00f5a0}.finish-screen{position:fixed;z-index:10;inset:0;background:#020812d9;display:none;place-items:center;padding:20px;text-align:center}.finish-card{width:min(360px,100%);background:#102235;border:1px solid #00e99a;border-radius:18px;padding:24px;box-shadow:0 18px 55px #000b}.finish-card h2{color:#00f5a0;margin:0 0 8px}.finish-card p{color:#d0e0e9;font-size:14px;line-height:1.5}.next-mission{width:100%;padding:14px;border:0;border-radius:11px;background:#00e99a;color:#04130d;font-weight:900;font-size:16px}.finish-screen.show{display:grid}
+.mission-banner{position:fixed;z-index:4;left:50%;top:68px;transform:translateX(-50%);background:#07111ddd;border:1px solid #00e99a;border-radius:12px;padding:8px 14px;text-align:center;min-width:190px;pointer-events:none}.mission-banner b{color:#00f5a0}.finish-screen{position:fixed;z-index:10;inset:0;background:#020812d9;display:none;place-items:center;padding:20px;text-align:center}.finish-card{width:min(360px,100%);background:#102235;border:1px solid #00e99a;border-radius:18px;padding:24px;box-shadow:0 18px 55px #000b}.finish-card h2{color:#00f5a0;margin:0 0 8px}.finish-card p{color:#d0e0e9;font-size:14px;line-height:1.5}.next-mission{width:100%;padding:14px;border:0;border-radius:11px;background:#00e99a;color:#04130d;font-weight:900;font-size:16px}.finish-screen.show{display:grid}.countdown-screen{position:fixed;z-index:12;inset:0;display:none;place-items:center;background:#020812b8;text-align:center;pointer-events:none}.countdown-screen.show{display:grid}.countdown-number{font-size:clamp(76px,22vw,150px);font-weight:1000;color:#00f5a0;text-shadow:0 0 30px #00e99a;animation:countPop .85s ease both}@keyframes countPop{0%{transform:scale(1.5);opacity:0}25%{opacity:1}100%{transform:scale(1);opacity:1}}
 </style>
 </head>
 <body>
 <div id="scene"></div>
+<div class="countdown-screen" id="countdownScreen"><div class="countdown-number" id="countdownNumber">3</div></div>
 <div class="finish-screen" id="finishScreen"><div class="finish-card"><h2 id="finishTitle">MISSION COMPLETE!</h2><p id="finishText">Naabot mo ang finish line!</p><button class="next-mission" id="nextMission">NEXT MISSION ▶</button></div></div>
 <div class="start-screen" id="startScreen"><div class="start-card"><h2>GAMEVERSE PH · DRIVE</h2><p>Handa ka na? Pindutin ang Start Drive para simulan ang 3D driving simulator. Gamitin ang steering pad at accelerator sa screen.</p><button class="start-drive" id="startDrive" type="button">▶ START DRIVE</button></div></div>
 <div class="mission-banner">MISSION <b id="missionNo">1 / 6</b><br><span id="missionName">CITY HIGHWAY</span><br>LEVEL <b id="levelNo">1 / 25</b> · FINISH <b id="missionGoal">300 m</b></div>
-<div class="hud"><div class="pill">GAMEVERSE PH <b>DRIVE</b></div><div class="pill">DISTANCE <b id="distance">0 m</b></div><div class="pill">MODE <b id="mode">RIVAL CHALLENGE</b></div><div class="pill">CAR HP <b id="carHealth">100%</b></div><div class="pill">RIVALS <b>6 AI</b></div></div>
+<div class="hud"><div class="pill">GAMEVERSE PH <b>DRIVE</b></div><div class="pill">DISTANCE <b id="distance">0 m</b></div><div class="pill">MODE <b id="mode">RIVAL CHALLENGE</b></div><div class="pill">CAR HP <b id="carHealth">100%</b></div><div class="pill">RIVALS <b>6 AI</b></div><div class="pill">COINS <b id="coinBalance">0</b> 🪙</div></div>
 <div class="topright"><button class="ui-btn" id="soundBtn">🔊 SOUND ON</button><button class="ui-btn" id="cameraBtn">CAMERA</button><button class="ui-btn" id="resetBtn">RESET</button><a class="ui-btn" href="../" style="text-decoration:none">LOBBY</a></div>
 <div class="center" id="message"><strong>3D DRIVING SIMULATOR</strong><small>Accelerate to start your drive</small></div>
 <div class="speed"><b id="speed">0</b><small>KM/H</small></div>
@@ -77,6 +78,8 @@ let missionIndex=0,currentLevel=1,missionDistance=0,finishGate=null,missionCompl
 const MAX_LEVEL=25, SAVE_KEY="gv_drive_campaign_v2";
  function missionGoal(){return missions[missionIndex].goal+((currentLevel-1)*60)}
 let campaignProgress={unlockedMission:0,levels:[1,1,1,1,1,1]};
+ const REWARD_KEY="gv_drive_coins_v1";let coinBalance=0;try{coinBalance=Math.max(0,Number(localStorage.getItem(REWARD_KEY))||0)}catch(e){}
+ function updateCoins(){document.querySelector("#coinBalance").textContent=coinBalance.toLocaleString()}updateCoins();
 try{const saved=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");if(saved&&Array.isArray(saved.levels)){campaignProgress.unlockedMission=Math.max(0,Math.min(5,saved.unlockedMission||0));campaignProgress.levels=campaignProgress.levels.map((v,i)=>Math.max(1,Math.min(25,Number(saved.levels[i])||1)));}}catch(e){}
 function saveCampaign(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(campaignProgress))}catch(e){}}
 let audioCtx=null,soundOn=true,engineOsc=null,engineGain=null;
@@ -107,6 +110,7 @@ function loadMission(index,level=1){
 function completeMission(){
  if(missionComplete)return;
  missionComplete=true;driveStarted=false;speed=0;sfx("win");
+  const reward=100+(missionIndex*50)+(currentLevel*10)+Math.floor(health*.5);coinBalance+=reward;try{localStorage.setItem(REWARD_KEY,String(coinBalance))}catch(e){}updateCoins();
  const finalLevel=currentLevel>=MAX_LEVEL;
  if(finalLevel){
    campaignProgress.levels[missionIndex]=MAX_LEVEL;
@@ -117,14 +121,15 @@ function completeMission(){
    saveCampaign();
  }
  document.querySelector("#finishTitle").textContent=finalLevel?"MISSION UNLOCKED!":"LEVEL "+currentLevel+" COMPLETE!";
- document.querySelector("#finishText").textContent=finalLevel?(missionIndex===missions.length-1?"Natapos mo ang 25 levels sa huling mission!":"Natapos mo ang 25 levels sa "+missions[missionIndex].name+". Bukas na ang susunod na mission!"):"Natapos mo ang Level "+currentLevel+". Tapusin ang 25 levels para ma-unlock ang susunod na mission.";
+ document.querySelector("#finishText").textContent=(finalLevel?(missionIndex===missions.length-1?"Natapos mo ang 25 levels sa huling mission!":"Natapos mo ang 25 levels sa "+missions[missionIndex].name+". Bukas na ang susunod na mission!"):"Natapos mo ang Level "+currentLevel+". Tapusin ang 25 levels para ma-unlock ang susunod na mission.")+"\n\n🏆 REWARD: +"+reward+" COINS · TOTAL: "+coinBalance+" COINS";
  const next=document.querySelector("#nextMission");
  next.textContent=finalLevel?(missionIndex===missions.length-1?"🏆 CAMPAIGN COMPLETE":"UNLOCKED: NEXT MISSION ▶"):"NEXT LEVEL ▶";
  document.querySelector("#finishScreen").classList.add("show");
 }
-document.querySelector("#nextMission").onclick=()=>{
+function startCountdown(){driveStarted=false;speed=0;const panel=document.querySelector("#countdownScreen"),label=document.querySelector("#countdownNumber");panel.classList.add("show");let count=3;label.textContent="3";audioReady();sfx("start");const tick=()=>{count--;if(count>0){label.textContent=String(count);sfx("gear");setTimeout(tick,900)}else{label.textContent="GO!";sfx("start");setTimeout(()=>{panel.classList.remove("show");driveStarted=true;document.querySelector("#message").style.display="block"},650)}};setTimeout(tick,900)}
+ document.querySelector("#nextMission").onclick=()=>{
  document.querySelector("#finishScreen").classList.remove("show");
- if(currentLevel<MAX_LEVEL){loadMission(missionIndex,currentLevel+1);reset();document.querySelector("#startScreen").classList.add("hidden");driveStarted=true;sfx("start");return}
+ if(currentLevel<MAX_LEVEL){loadMission(missionIndex,currentLevel+1);reset();document.querySelector("#startScreen").classList.add("hidden");startCountdown();return}
  if(missionIndex<missions.length-1){loadMission(missionIndex+1,campaignProgress.levels[missionIndex+1]||1);reset();document.querySelector("#startScreen").classList.add("hidden");driveStarted=true;sfx("start");return}
  document.querySelector("#finishTitle").textContent="CAMPAIGN COMPLETE!";
  document.querySelector("#finishText").textContent="Natapos mo ang lahat ng 6 missions at 150 levels!";
@@ -147,8 +152,8 @@ const keyMap={ArrowLeft:"left",a:"left",ArrowRight:"right",d:"right",ArrowUp:"ac
 addEventListener("keydown",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key]){held[keyMap[key]]=true;e.preventDefault()}if(key==="r")setGear("R");if(key==="n")setGear("N");if(key==="f")setGear("D")});
 addEventListener("keyup",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key])held[keyMap[key]]=false});
 document.querySelector("#cameraBtn").onclick=()=>cameraMode=(cameraMode+1)%2;
-document.querySelector("#startDrive").onclick=()=>{audioReady();sfx("start");driveStarted=true;document.querySelector("#startScreen").classList.add("hidden");document.querySelector("#message").style.display="block"};
-function reset(){speed=0;distance=0;missionDistance=0;missionComplete=false;health=100;damageCooldown=0;wheelAngle=0;wheel.style.transform="rotate(0deg)";document.querySelector("#carHealth").textContent="100%";rivals.forEach((r,i)=>r.position.set([-4,-2.4,0,2.4,4,-1.2][i],0,-90-i*82));driveStarted=false;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";document.querySelector("#startScreen").classList.remove("hidden");setGear("D")}
+document.querySelector("#startDrive").onclick=()=>{document.querySelector("#startScreen").classList.add("hidden");startCountdown()};
+function reset(){document.querySelector("#countdownScreen").classList.remove("show");speed=0;distance=0;missionDistance=0;missionComplete=false;health=100;damageCooldown=0;wheelAngle=0;wheel.style.transform="rotate(0deg)";document.querySelector("#carHealth").textContent="100%";rivals.forEach((r,i)=>r.position.set([-4,-2.4,0,2.4,4,-1.2][i],0,-90-i*82));driveStarted=false;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";document.querySelector("#startScreen").classList.remove("hidden");setGear("D")}
 document.querySelector("#resetBtn").onclick=reset;
 function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.04);last=now;
  const throttle=driveStarted&&held.accelerate&&gear!=="N"&&gear!=="R",reverse=driveStarted&&(held.reverse||gear==="R"&&held.accelerate),braking=held.brake||held.handbrake;
