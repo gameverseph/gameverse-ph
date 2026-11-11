@@ -130,7 +130,7 @@ function startCountdown(){driveStarted=false;speed=0;const panel=document.queryS
  document.querySelector("#nextMission").onclick=()=>{
  document.querySelector("#finishScreen").classList.remove("show");
  if(currentLevel<MAX_LEVEL){loadMission(missionIndex,currentLevel+1);reset();document.querySelector("#startScreen").classList.add("hidden");startCountdown();return}
- if(missionIndex<missions.length-1){loadMission(missionIndex+1,campaignProgress.levels[missionIndex+1]||1);reset();document.querySelector("#startScreen").classList.add("hidden");driveStarted=true;sfx("start");return}
+ if(missionIndex<missions.length-1){loadMission(missionIndex+1,campaignProgress.levels[missionIndex+1]||1);reset();document.querySelector("#startScreen").classList.add("hidden");startCountdown();return}
  document.querySelector("#finishTitle").textContent="CAMPAIGN COMPLETE!";
  document.querySelector("#finishText").textContent="Natapos mo ang lahat ng 6 missions at 150 levels!";
  document.querySelector("#nextMission").textContent="REPLAY CAMPAIGN";
