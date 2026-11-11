@@ -26,7 +26,7 @@
 <div class="finish-screen" id="finishScreen"><div class="finish-card"><h2 id="finishTitle">MISSION COMPLETE!</h2><p id="finishText">Naabot mo ang finish line!</p><button class="next-mission" id="nextMission">NEXT MISSION ▶</button></div></div>
 <div class="start-screen" id="startScreen"><div class="start-card"><h2>GAMEVERSE PH · DRIVE</h2><p>Handa ka na? Pindutin ang Start Drive para simulan ang 3D driving simulator. Gamitin ang steering pad at accelerator sa screen.</p><button class="start-drive" id="startDrive" type="button">▶ START DRIVE</button></div></div>
 <div class="mission-banner">MISSION <b id="missionNo">1 / 6</b><br><span id="missionName">CITY HIGHWAY</span><br>LEVEL <b id="levelNo">1 / 25</b> · FINISH <b id="missionGoal">300 m</b></div>
-<div class="hud"><div class="pill">GAMEVERSE PH <b>DRIVE</b></div><div class="pill">DISTANCE <b id="distance">0 m</b></div><div class="pill">MODE <b id="mode">RIVAL CHALLENGE</b></div><div class="pill">CAR HP <b id="carHealth">100%</b></div><div class="pill">RIVALS <b>3 AI</b></div></div>
+<div class="hud"><div class="pill">GAMEVERSE PH <b>DRIVE</b></div><div class="pill">DISTANCE <b id="distance">0 m</b></div><div class="pill">MODE <b id="mode">RIVAL CHALLENGE</b></div><div class="pill">CAR HP <b id="carHealth">100%</b></div><div class="pill">RIVALS <b>6 AI</b></div></div>
 <div class="topright"><button class="ui-btn" id="soundBtn">🔊 SOUND ON</button><button class="ui-btn" id="cameraBtn">CAMERA</button><button class="ui-btn" id="resetBtn">RESET</button><a class="ui-btn" href="../" style="text-decoration:none">LOBBY</a></div>
 <div class="center" id="message"><strong>3D DRIVING SIMULATOR</strong><small>Accelerate to start your drive</small></div>
 <div class="speed"><b id="speed">0</b><small>KM/H</small></div>
@@ -61,20 +61,21 @@ function makeCar(bodyColor=0xd81f32){
  scene.add(g);return g
 }
 const car=makeCar();car.position.set(0,0,8);
-const rivals=[makeCar(0x1769aa),makeCar(0xe5a21a),makeCar(0x6d35a8)];rivals.forEach((r,i)=>{r.position.set([-3.5,2.8,0][i],0,-65-i*58);r.userData.baseX=r.position.x;r.userData.phase=i*2.1;r.userData.passed=false});
+const rivalColors=[0x1769aa,0xe5a21a,0x6d35a8,0xc83232,0x20a080,0xdddddd];const rivals=rivalColors.map(color=>makeCar(color));rivals.forEach((r,i)=>{r.position.set([-4,-2.4,0,2.4,4,-1.2][i],0,-90-i*82);r.userData.baseX=r.position.x;r.userData.phase=i*2.1;r.userData.passed=false});
 const trees=[];
 for(let z=28;z>-390;z-=13)for(const side of [-1,1]){const x=side*(12+Math.random()*9);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.22,.32,2,7),mat(0x65452d));trunk.position.set(x,1,z-Math.random()*8);scene.add(trunk);const crown=new THREE.Mesh(new THREE.ConeGeometry(1.7,4.2,8),mat(0x1d603b));crown.position.set(x,3.8,trunk.position.z);crown.castShadow=true;scene.add(crown);trees.push({trunk,crown})}
-const obstacles=[];for(let i=0;i<12;i++){const o=box(1.5,.9,1.5,0xd18a22,(Math.random()-.5)*8,.45,-30-i*27);obstacles.push(o)}
+const obstacles=[];for(let i=0;i<18;i++){const o=box(1.5,.9,1.5,0xd18a22,(Math.random()-.5)*8,.45,-45-i*38);obstacles.push(o)}
 const missions=[
- {name:"CITY HIGHWAY",place:"Neon City",goal:300,sky:0x719fc8,land:0x53645c,asphalt:0x30343b,enemy:0x1769aa},
- {name:"MOUNTAIN PASS",place:"Highland Ridge",goal:400,sky:0x91b4c9,land:0x526b43,asphalt:0x45494d,enemy:0x9b4324},
- {name:"DESERT RUN",place:"Red Sand Valley",goal:450,sky:0xe3ad75,land:0xb98a4c,asphalt:0x4a4540,enemy:0xc47b1c},
- {name:"COASTAL RACE",place:"Blue Coast",goal:500,sky:0x64b8d5,land:0x3d8a67,asphalt:0x343b42,enemy:0x177a91},
- {name:"NIGHT PURSUIT",place:"Metro Night",goal:550,sky:0x101a38,land:0x273a35,asphalt:0x20242d,enemy:0x8b43b8},
- {name:"SNOW ROAD",place:"Frozen Summit",goal:600,sky:0xb8d2e4,land:0xc7d8dc,asphalt:0x59636a,enemy:0x2875a5}
+ {name:"CITY HIGHWAY",place:"Neon City",goal:900,sky:0x719fc8,land:0x53645c,asphalt:0x30343b,enemy:0x1769aa},
+ {name:"MOUNTAIN PASS",place:"Highland Ridge",goal:1100,sky:0x91b4c9,land:0x526b43,asphalt:0x45494d,enemy:0x9b4324},
+ {name:"DESERT RUN",place:"Red Sand Valley",goal:1300,sky:0xe3ad75,land:0xb98a4c,asphalt:0x4a4540,enemy:0xc47b1c},
+ {name:"COASTAL RACE",place:"Blue Coast",goal:1500,sky:0x64b8d5,land:0x3d8a67,asphalt:0x343b42,enemy:0x177a91},
+ {name:"NIGHT PURSUIT",place:"Metro Night",goal:1700,sky:0x101a38,land:0x273a35,asphalt:0x20242d,enemy:0x8b43b8},
+ {name:"SNOW ROAD",place:"Frozen Summit",goal:1900,sky:0xb8d2e4,land:0xc7d8dc,asphalt:0x59636a,enemy:0x2875a5}
 ];
 let missionIndex=0,currentLevel=1,missionDistance=0,finishGate=null,missionComplete=false;
 const MAX_LEVEL=25, SAVE_KEY="gv_drive_campaign_v2";
+ function missionGoal(){return missions[missionIndex].goal+((currentLevel-1)*60)}
 let campaignProgress={unlockedMission:0,levels:[1,1,1,1,1,1]};
 try{const saved=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");if(saved&&Array.isArray(saved.levels)){campaignProgress.unlockedMission=Math.max(0,Math.min(5,saved.unlockedMission||0));campaignProgress.levels=campaignProgress.levels.map((v,i)=>Math.max(1,Math.min(25,Number(saved.levels[i])||1)));}}catch(e){}
 function saveCampaign(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(campaignProgress))}catch(e){}}
@@ -98,9 +99,9 @@ function loadMission(index,level=1){
  const m=missions[index];scene.background.setHex(m.sky);scene.fog.color.setHex(m.sky);ground.material.color.setHex(m.land);road.material.color.setHex(m.asphalt);
  document.querySelector("#missionNo").textContent=(index+1)+" / "+missions.length;
  document.querySelector("#missionName").textContent=m.name+" · "+m.place;
- const goal=m.goal+((currentLevel-1)*35);document.querySelector("#levelNo").textContent=currentLevel+" / "+MAX_LEVEL;document.querySelector("#missionGoal").textContent=goal+" m";
- rivals.forEach((r,i)=>{r.position.set([-3.5,2.8,0][i],0,-65-i*58);r.userData.baseX=r.position.x});
- obstacles.forEach((o,i)=>{o.position.set((Math.random()-.5)*8,.45,-30-i*27)});
+ const goal=missionGoal();document.querySelector("#levelNo").textContent=currentLevel+" / "+MAX_LEVEL;document.querySelector("#missionGoal").textContent=goal+" m";
+ rivals.forEach((r,i)=>{r.position.set([-4,-2.4,0,2.4,4,-1.2][i],0,-90-i*82);r.userData.baseX=r.position.x});
+ obstacles.forEach((o,i)=>{o.position.set((Math.random()-.5)*8,.45,-45-i*38)});
  makeFinishGate(8-goal);
 }
 function completeMission(){
@@ -147,7 +148,7 @@ addEventListener("keydown",e=>{const key=e.key.length===1?e.key.toLowerCase():e.
 addEventListener("keyup",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key])held[keyMap[key]]=false});
 document.querySelector("#cameraBtn").onclick=()=>cameraMode=(cameraMode+1)%2;
 document.querySelector("#startDrive").onclick=()=>{audioReady();sfx("start");driveStarted=true;document.querySelector("#startScreen").classList.add("hidden");document.querySelector("#message").style.display="block"};
-function reset(){speed=0;distance=0;missionDistance=0;missionComplete=false;health=100;damageCooldown=0;wheelAngle=0;wheel.style.transform="rotate(0deg)";document.querySelector("#carHealth").textContent="100%";rivals.forEach((r,i)=>r.position.set([-3.5,2.8,0][i],0,-65-i*58));driveStarted=false;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";document.querySelector("#startScreen").classList.remove("hidden");setGear("D")}
+function reset(){speed=0;distance=0;missionDistance=0;missionComplete=false;health=100;damageCooldown=0;wheelAngle=0;wheel.style.transform="rotate(0deg)";document.querySelector("#carHealth").textContent="100%";rivals.forEach((r,i)=>r.position.set([-4,-2.4,0,2.4,4,-1.2][i],0,-90-i*82));driveStarted=false;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";document.querySelector("#startScreen").classList.remove("hidden");setGear("D")}
 document.querySelector("#resetBtn").onclick=reset;
 function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.04);last=now;
  const throttle=driveStarted&&held.accelerate&&gear!=="N"&&gear!=="R",reverse=driveStarted&&(held.reverse||gear==="R"&&held.accelerate),braking=held.brake||held.handbrake;
@@ -156,10 +157,10 @@ function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last
  speed=THREE.MathUtils.clamp(speed,-35,160);if(engineOsc&&engineGain&&audioCtx){engineOsc.frequency.setTargetAtTime(65+Math.abs(speed)*3.2,audioCtx.currentTime,.08);engineGain.gain.setTargetAtTime(soundOn&&driveStarted&&Math.abs(speed)>2?.025:0,audioCtx.currentTime,.12)}if(engineOsc&&engineGain&&audioCtx){engineOsc.frequency.setTargetAtTime(65+Math.abs(speed)*3.2,audioCtx.currentTime,.08);engineGain.gain.setTargetAtTime(soundOn&&driveStarted&&Math.abs(speed)>2?.025:0,audioCtx.currentTime,.12)}
  const direction=THREE.MathUtils.clamp((held.left?-1:0)+(held.right?1:0)+wheelAngle/120,-1,1);steer=THREE.MathUtils.damp(steer,direction,5,dt);
  const movement=speed/3.6;car.position.z-=movement*dt;car.position.x+=steer*movement*.42*dt;car.position.x=THREE.MathUtils.clamp(car.position.x,-5.3,5.3);car.rotation.y=-steer*Math.min(Math.abs(movement)/18,1)*.22;
- distance+=Math.abs(movement)*dt;document.querySelector("#speed").textContent=Math.round(Math.abs(speed));document.querySelector("#distance").textContent=Math.floor(distance)+" m";missionDistance+=Math.max(0,movement)*dt;if(missionDistance>=missions[missionIndex].goal){completeMission()}
+ distance+=Math.abs(movement)*dt;document.querySelector("#speed").textContent=Math.round(Math.abs(speed));document.querySelector("#distance").textContent=Math.floor(distance)+" m";missionDistance+=Math.max(0,movement)*dt;if(missionDistance>=missionGoal()){completeMission()}
  obstacles.forEach(o=>{if(o.position.z>car.position.z+20)o.position.z-=330;if(Math.abs(o.position.z-car.position.z)<2.2&&Math.abs(o.position.x-car.position.x)<1.6&&damageCooldown<=0){speed*=.55;health=Math.max(0,health-12);damageCooldown=1.1;sfx("crash")}});
  damageCooldown=Math.max(0,damageCooldown-dt);
- rivals.forEach((r,i)=>{r.position.z-=(20+i*3)*dt;r.position.x=r.userData.baseX+Math.sin(now*.0008+r.userData.phase)*1.2;if(r.position.z>car.position.z+16){r.position.z=car.position.z-150-i*35;r.userData.baseX=(Math.random()-.5)*7}if(Math.abs(r.position.z-car.position.z)<3.1&&Math.abs(r.position.x-car.position.x)<2.15&&damageCooldown<=0){health=Math.max(0,health-22);speed*=.48;damageCooldown=1.25;r.position.z-=18;sfx("hit");sfx("hit")}});
+ rivals.forEach((r,i)=>{r.position.z-=(25+i*2.8+currentLevel*.45)*dt;r.position.x=r.userData.baseX+Math.sin(now*.001+r.userData.phase)*1.45;if(r.position.z>car.position.z+16){r.position.z=car.position.z-250-i*65;r.userData.baseX=(Math.random()-.5)*8}if(Math.abs(r.position.z-car.position.z)<3.1&&Math.abs(r.position.x-car.position.x)<2.15&&damageCooldown<=0){health=Math.max(0,health-22);speed*=.48;damageCooldown=1.25;r.position.z-=22;sfx("hit")}});
  document.querySelector("#carHealth").textContent=Math.round(health)+"%";if(health<=0){speed=0;driveStarted=false;document.querySelector("#message").style.display="block";document.querySelector("#message").innerHTML="<strong>CAR WRECKED!</strong><small>Naubos ang HP. Pindutin ang RESET para subukan ulit.</small>"}
  if(Math.abs(speed)>2)document.querySelector("#message").style.display="none";
  if(cameraMode===0){camera.position.lerp(new THREE.Vector3(car.position.x,5.3,car.position.z+10),.08);camera.lookAt(car.position.x,1,car.position.z-8)}else{camera.position.lerp(new THREE.Vector3(car.position.x,2.25,car.position.z+1.1),.16);camera.lookAt(car.position.x,1.7,car.position.z-18)}
