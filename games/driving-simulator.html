@@ -60,14 +60,12 @@ const car=makeCar();car.position.set(0,0,8);\nconst rivals=[makeCar(0x1769aa),ma
 const trees=[];
 for(let z=28;z>-390;z-=13)for(const side of [-1,1]){const x=side*(12+Math.random()*9);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.22,.32,2,7),mat(0x65452d));trunk.position.set(x,1,z-Math.random()*8);scene.add(trunk);const crown=new THREE.Mesh(new THREE.ConeGeometry(1.7,4.2,8),mat(0x1d603b));crown.position.set(x,3.8,trunk.position.z);crown.castShadow=true;scene.add(crown);trees.push({trunk,crown})}
 const obstacles=[];for(let i=0;i<12;i++){const o=box(1.5,.9,1.5,0xd18a22,(Math.random()-.5)*8,.45,-30-i*27);obstacles.push(o)}
-let speed=0,steer=0,distance=0,gear="D",cameraMode=0,steerInput=0,driveStarted=false;const held={};let last=performance.now();
-let stickX=0,stickY=0,stickPointer=null;
-const stickPad=document.querySelector("#stickPad"),stickThumb=document.querySelector("#stickThumb");
-function moveStick(e){const r=stickPad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,limit=r.width*.34,len=Math.hypot(dx,dy),scale=len>limit?limit/len:1;stickX=THREE.MathUtils.clamp(dx*scale/limit,-1,1);stickY=THREE.MathUtils.clamp(dy*scale/limit,-1,1);stickThumb.style.left=(50+stickX*34)+"%";stickThumb.style.top=(50+stickY*34)+"%"}
-function releaseStick(e){if(stickPointer!==e.pointerId)return;stickPointer=null;stickX=0;stickY=0;stickThumb.style.left="50%";stickThumb.style.top="50%"}
-stickPad.addEventListener("pointerdown",e=>{e.preventDefault();stickPointer=e.pointerId;stickPad.setPointerCapture(e.pointerId);moveStick(e)});
-stickPad.addEventListener("pointermove",e=>{if(stickPointer===e.pointerId){e.preventDefault();moveStick(e)}});
-stickPad.addEventListener("pointerup",releaseStick);stickPad.addEventListener("pointercancel",releaseStick);
+let speed=0,steer=0,distance=0,gear="D",cameraMode=0,driveStarted=false,health=100,damageCooldown=0,wheelPointer=null,wheelStartAngle=0,wheelAngle=0;const held={};let last=performance.now();
+const wheel=document.querySelector("#steeringWheel");
+function wheelMove(e){const r=wheel.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let a=Math.atan2(e.clientY-cy,e.clientX-cx)*180/Math.PI;let d=a-wheelStartAngle;if(d>180)d-=360;if(d< -180)d+=360;wheelAngle=THREE.MathUtils.clamp(d,-120,120);wheel.style.transform="rotate("+wheelAngle+"deg)"}
+function wheelDown(e){e.preventDefault();wheelPointer=e.pointerId;const r=wheel.getBoundingClientRect();wheelStartAngle=Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))*180/Math.PI;wheel.setPointerCapture(e.pointerId);wheelMove(e)}
+function wheelUp(e){if(wheelPointer!==e.pointerId)return;wheelPointer=null;wheelAngle=0;wheel.style.transform="rotate(0deg)"}
+wheel.addEventListener("pointerdown",wheelDown);wheel.addEventListener("pointermove",e=>{if(wheelPointer===e.pointerId)wheelMove(e)});wheel.addEventListener("pointerup",wheelUp);wheel.addEventListener("pointercancel",wheelUp);
 function setGear(g){gear=g;document.querySelectorAll(".gear").forEach(b=>b.classList.toggle("active",b.dataset.gear===g));document.querySelector("#mode").textContent=g==="D"?"DRIVE":g==="R"?"REVERSE":"NEUTRAL"}
 document.querySelectorAll(".gear").forEach(b=>b.addEventListener("click",()=>setGear(b.dataset.gear)));
 document.querySelectorAll("[data-control]").forEach(b=>{const k=b.dataset.control;const on=e=>{e.preventDefault();if(b.setPointerCapture)b.setPointerCapture(e.pointerId);held[k]=true;b.classList.add("active")},off=e=>{held[k]=false;b.classList.remove("active")};b.addEventListener("pointerdown",on);["pointerup","pointercancel","lostpointercapture"].forEach(ev=>b.addEventListener(ev,off))});
