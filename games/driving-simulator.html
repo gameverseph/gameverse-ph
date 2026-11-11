@@ -8,11 +8,11 @@
 .hud{position:fixed;z-index:3;left:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap}.pill{background:#07111ddd;border:1px solid #426078;border-radius:10px;padding:8px 11px;font-size:12px}.pill b{color:#00f5a0}
 .topright{position:fixed;z-index:4;right:12px;top:12px;display:flex;gap:8px}.ui-btn{border:1px solid #567080;background:#101d2c;color:white;padding:10px 13px;border-radius:10px;font-weight:800}
 .controls{position:fixed;z-index:4;bottom:14px;left:0;right:0;display:flex;justify-content:space-between;align-items:end;padding:0 14px;pointer-events:none}.cluster{display:flex;gap:9px;align-items:end;pointer-events:auto}.control{width:66px;height:66px;border-radius:18px;border:1px solid #8aa7b8;background:#10243bdc;color:#fff;font-weight:900;font-size:12px;touch-action:none;user-select:none}.control.big{width:76px;height:76px;background:#063d2b;border-color:#00e99a}.control.reverse{background:#183b55;border-color:#70bde8}.control.brake{background:#4b171c;border-color:#f66}.control:active,.control.active{filter:brightness(1.6);transform:scale(.96)}
-.stick-wrap{position:fixed;z-index:5;left:16px;bottom:18px;width:126px;height:126px;display:grid;place-items:center;touch-action:none;user-select:none}
+.steering-wheel{position:fixed;z-index:6;left:16px;bottom:18px;width:132px;height:132px;border:12px solid #d8e6ee;border-radius:50%;background:radial-gradient(circle,#253b50 0 17%,#101c2b 18% 100%);box-shadow:0 5px 18px #000b,inset 0 0 0 3px #587185;touch-action:none;user-select:none;display:grid;place-items:center}.wheel-spoke{position:absolute;width:10px;height:48px;background:linear-gradient(90deg,#879eac,#263b4c);border-radius:5px;top:7px;left:calc(50% - 5px);transform-origin:50% 100%}.wheel-spoke.left{top:50%;left:8px;width:48px;height:10px;transform:rotate(25deg);transform-origin:right center}.wheel-spoke.right{top:50%;left:auto;right:8px;width:48px;height:10px;transform:rotate(-25deg);transform-origin:left center}.wheel-hub{width:35px;height:35px;border-radius:50%;background:linear-gradient(145deg,#d8e6ee,#526d80);border:3px solid #172c3d;z-index:1}.wheel-label{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:900;white-space:nowrap;color:#e6f6ff;text-shadow:0 2px 5px #000}
 .stick-pad{width:116px;height:116px;border-radius:50%;border:2px solid #8aa7b8;background:radial-gradient(circle,#28445b,#0b1a2bdc);box-shadow:0 4px 18px #0008;position:relative;touch-action:none}
 .stick-thumb{position:absolute;width:48px;height:48px;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border:2px solid #d8f5ff;background:linear-gradient(145deg,#00e99a,#087c70);box-shadow:0 3px 12px #0009;pointer-events:none}
 .stick-label{position:absolute;left:50%;top:-19px;transform:translateX(-50%);font-size:10px;font-weight:800;color:#d9efff;white-space:nowrap;text-shadow:0 1px 4px #000}
-@media(max-width:600px){.stick-wrap{width:112px;height:112px;left:10px;bottom:12px}.stick-pad{width:104px;height:104px}.stick-thumb{width:44px;height:44px}}
+@media(max-width:600px){.steering-wheel{width:112px;height:112px;left:10px;bottom:12px;border-width:10px}.wheel-spoke{height:40px}.wheel-spoke.left,.wheel-spoke.right{width:40px}}
 .start-screen{position:fixed;z-index:8;inset:0;display:grid;place-items:center;background:#050b13b8;padding:22px;text-align:center}.start-card{background:#101d2c;border:1px solid #5d7b91;border-radius:16px;padding:24px;max-width:340px;width:100%;box-shadow:0 18px 55px #000a}.start-card h2{color:#00f5a0;margin:0 0 8px}.start-card p{color:#c5d5df;font-size:13px;line-height:1.5}.start-drive{width:100%;border:0;border-radius:11px;padding:15px;background:#00e99a;color:#04130d;font-weight:900;font-size:17px}.start-screen.hidden{display:none}.center{position:fixed;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;text-shadow:0 2px 8px #000}.center strong{font-size:clamp(20px,4vw,34px);color:#fff}.center small{display:block;color:#cde3ef;margin-top:6px}
 .gearbox{position:fixed;z-index:4;right:14px;bottom:105px;display:flex;gap:5px}.gear{background:#132438;color:#fff;border:1px solid #5b7182;border-radius:8px;padding:9px 12px;font-weight:bold}.gear.active{background:#00d88b;color:#04130d}
 .speed{position:fixed;z-index:4;left:50%;bottom:106px;transform:translateX(-50%);background:#07111ddd;border:1px solid #426078;border-radius:14px;padding:8px 18px;text-align:center;min-width:115px}.speed b{font-size:27px;color:#00f5a0}.speed small{display:block;color:#a9c1cf;font-size:10px}
@@ -22,12 +22,12 @@
 <body>
 <div id="scene"></div>
 <div class="start-screen" id="startScreen"><div class="start-card"><h2>GAMEVERSE PH · DRIVE</h2><p>Handa ka na? Pindutin ang Start Drive para simulan ang 3D driving simulator. Gamitin ang steering pad at accelerator sa screen.</p><button class="start-drive" id="startDrive" type="button">▶ START DRIVE</button></div></div>
-<div class="hud"><div class="pill">GAMEVERSE PH <b>DRIVE</b></div><div class="pill">DISTANCE <b id="distance">0 m</b></div><div class="pill">MODE <b id="mode">FREE DRIVE</b></div></div>
+<div class="hud"><div class="pill">GAMEVERSE PH <b>DRIVE</b></div><div class="pill">DISTANCE <b id="distance">0 m</b></div><div class="pill">MODE <b id="mode">RIVAL CHALLENGE</b></div><div class="pill">CAR HP <b id="carHealth">100%</b></div><div class="pill">RIVALS <b>3 AI</b></div></div>
 <div class="topright"><button class="ui-btn" id="cameraBtn">CAMERA</button><button class="ui-btn" id="resetBtn">RESET</button><a class="ui-btn" href="../" style="text-decoration:none">LOBBY</a></div>
 <div class="center" id="message"><strong>3D DRIVING SIMULATOR</strong><small>Accelerate to start your drive</small></div>
 <div class="speed"><b id="speed">0</b><small>KM/H</small></div>
 <div class="gearbox"><button class="gear active" data-gear="D">D</button><button class="gear" data-gear="N">N</button><button class="gear" data-gear="R">R</button></div>
-<div class="stick-wrap" id="stickWrap" aria-label="Drag steering and drive control"><div class="stick-label">DRAG TO STEER / DRIVE</div><div class="stick-pad" id="stickPad"><div class="stick-thumb" id="stickThumb"></div></div></div>
+<div class="steering-wheel" id="steeringWheel" aria-label="Touch and rotate steering wheel"><div class="wheel-label">MANIBELA · IKOTIN</div><div class="wheel-spoke"></div><div class="wheel-spoke left"></div><div class="wheel-spoke right"></div><div class="wheel-hub"></div></div>
 <div class="controls">
  <div class="cluster"></div>
  <div class="cluster"><button class="control reverse" id="reverseBtn">BACK<br>▼</button><button class="control brake" data-control="brake">BRAKE</button><button class="control" data-control="handbrake">HANDBRAKE</button><button class="control big" data-control="accelerate">ACCEL<br>▲</button></div>
@@ -48,15 +48,15 @@ const road=new THREE.Mesh(new THREE.PlaneGeometry(15,420),mat(0x30343b));road.ro
 for(let x of [-7.2,7.2]){const line=new THREE.Mesh(new THREE.BoxGeometry(.18,.04,420),mat(0xf2f0d7));line.position.set(x,.03,-160);scene.add(line)}
 for(let z=20;z>-370;z-=12){const stripe=new THREE.Mesh(new THREE.BoxGeometry(.18,.035,5),mat(0xf7f0c8));stripe.position.set(0,.04,z);scene.add(stripe)}
 function box(w,h,d,color,x,y,z,parent=scene){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(color));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m}
-function makeCar(){
- const g=new THREE.Group();box(2.05,.65,4.1,0xd81f32,0,.9,0,g).position.y=.9;
+function makeCar(bodyColor=0xd81f32){
+ const g=new THREE.Group();box(2.05,.65,4.1,bodyColor,0,.9,0,g).position.y=.9;
  box(1.55,.72,1.85,0x172b43,0,1.55,-.25,g);
  box(1.7,.16,1.8,0xc8e4f0,0,1.94,-.25,g);
  for(const x of [-.78,.78])for(const z of [-1.35,1.35]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.39,.39,.22,20),mat(0x111318));w.rotation.z=Math.PI/2;w.position.set(x,.48,z);g.add(w);const hub=new THREE.Mesh(new THREE.CylinderGeometry(.16,.16,.23,16),mat(0x9ba7ad));hub.rotation.z=Math.PI/2;hub.position.copy(w.position);g.add(hub)}
  for(const x of [-.7,.7]){box(.35,.2,.08,0xfff0bb,x,1.02,-2.06,g);box(.35,.2,.08,0xff3322,x,1.02,2.06,g)}
  scene.add(g);return g
 }
-const car=makeCar();car.position.set(0,0,8);
+const car=makeCar();car.position.set(0,0,8);\nconst rivals=[makeCar(0x1769aa),makeCar(0xe5a21a),makeCar(0x6d35a8)];rivals.forEach((r,i)=>{r.position.set([-3.5,2.8,0][i],0,-65-i*58);r.userData.baseX=r.position.x;r.userData.phase=i*2.1;r.userData.passed=false});
 const trees=[];
 for(let z=28;z>-390;z-=13)for(const side of [-1,1]){const x=side*(12+Math.random()*9);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.22,.32,2,7),mat(0x65452d));trunk.position.set(x,1,z-Math.random()*8);scene.add(trunk);const crown=new THREE.Mesh(new THREE.ConeGeometry(1.7,4.2,8),mat(0x1d603b));crown.position.set(x,3.8,trunk.position.z);crown.castShadow=true;scene.add(crown);trees.push({trunk,crown})}
 const obstacles=[];for(let i=0;i<12;i++){const o=box(1.5,.9,1.5,0xd18a22,(Math.random()-.5)*8,.45,-30-i*27);obstacles.push(o)}
@@ -77,17 +77,17 @@ addEventListener("keydown",e=>{const key=e.key.length===1?e.key.toLowerCase():e.
 addEventListener("keyup",e=>{const key=e.key.length===1?e.key.toLowerCase():e.key;if(keyMap[key])held[keyMap[key]]=false});
 document.querySelector("#cameraBtn").onclick=()=>cameraMode=(cameraMode+1)%2;
 document.querySelector("#startDrive").onclick=()=>{driveStarted=true;document.querySelector("#startScreen").classList.add("hidden");document.querySelector("#message").style.display="block"};
-function reset(){speed=0;distance=0;driveStarted=false;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";document.querySelector("#startScreen").classList.remove("hidden");setGear("D")}
+function reset(){speed=0;distance=0;health=100;damageCooldown=0;wheelAngle=0;wheel.style.transform="rotate(0deg)";document.querySelector("#carHealth").textContent="100%";rivals.forEach((r,i)=>r.position.set([-3.5,2.8,0][i],0,-65-i*58));driveStarted=false;car.position.set(0,0,8);car.rotation.set(0,0,0);document.querySelector("#distance").textContent="0 m";document.querySelector("#message").style.display="block";document.querySelector("#startScreen").classList.remove("hidden");setGear("D")}
 document.querySelector("#resetBtn").onclick=reset;
 function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.04);last=now;
- const throttle=driveStarted&&(held.accelerate||stickY<-.22)&&gear!=="N"&&gear!=="R",reverse=driveStarted&&(held.reverse||(gear==="R"&&stickY>.22)),braking=held.brake||held.handbrake||(stickY>.22&&gear!=="R"&&!held.reverse);
+ const throttle=driveStarted&&held.accelerate&&gear!=="N"&&gear!=="R",reverse=driveStarted&&(held.reverse||gear==="R"&&held.accelerate),braking=held.brake||held.handbrake;
  if(reverse)speed-=15*dt;else if(throttle)speed+=22*dt;else speed*=Math.pow(.986,dt*60);
  if(braking)speed*=Math.pow(held.handbrake?.88:.91,dt*60);
  speed=THREE.MathUtils.clamp(speed,-35,160);
- const direction=THREE.MathUtils.clamp((held.left?-1:0)+(held.right?1:0)+stickX,-1,1);steer=THREE.MathUtils.damp(steer,direction,5,dt);
+ const direction=THREE.MathUtils.clamp((held.left?-1:0)+(held.right?1:0)+wheelAngle/120,-1,1);steer=THREE.MathUtils.damp(steer,direction,5,dt);
  const movement=speed/3.6;car.position.z-=movement*dt;car.position.x+=steer*movement*.42*dt;car.position.x=THREE.MathUtils.clamp(car.position.x,-5.3,5.3);car.rotation.y=-steer*Math.min(Math.abs(movement)/18,1)*.22;
  distance+=Math.abs(movement)*dt;document.querySelector("#speed").textContent=Math.round(Math.abs(speed));document.querySelector("#distance").textContent=Math.floor(distance)+" m";
- obstacles.forEach(o=>{if(o.position.z>car.position.z+20)o.position.z-=330;if(Math.abs(o.position.z-car.position.z)<2.2&&Math.abs(o.position.x-car.position.x)<1.6){speed*=.96}});
+ obstacles.forEach(o=>{if(o.position.z>car.position.z+20)o.position.z-=330;if(Math.abs(o.position.z-car.position.z)<2.2&&Math.abs(o.position.x-car.position.x)<1.6&&damageCooldown<=0){speed*=.55;health=Math.max(0,health-12);damageCooldown=1.1}});\n damageCooldown=Math.max(0,damageCooldown-dt);\n rivals.forEach((r,i)=>{r.position.z-=(10+i*2)*dt;r.position.x=r.userData.baseX+Math.sin(now*.0008+r.userData.phase)*1.2;if(r.position.z>car.position.z+16){r.position.z=car.position.z-150-i*35;r.userData.baseX=(Math.random()-.5)*7}if(Math.abs(r.position.z-car.position.z)<3.1&&Math.abs(r.position.x-car.position.x)<2.15&&damageCooldown<=0){health=Math.max(0,health-22);speed*=.48;damageCooldown=1.25;r.position.z-=18}});\n document.querySelector("#carHealth").textContent=Math.round(health)+"%";if(health<=0){speed=0;driveStarted=false;document.querySelector("#message").style.display="block";document.querySelector("#message").innerHTML="<strong>CAR WRECKED!</strong><small>Naubos ang HP. Pindutin ang RESET para subukan ulit.</small>"}
  if(Math.abs(speed)>2)document.querySelector("#message").style.display="none";
  if(cameraMode===0){camera.position.lerp(new THREE.Vector3(car.position.x,5.3,car.position.z+10),.08);camera.lookAt(car.position.x,1,car.position.z-8)}else{camera.position.lerp(new THREE.Vector3(car.position.x,2.25,car.position.z+1.1),.16);camera.lookAt(car.position.x,1.7,car.position.z-18)}
  renderer.render(scene,camera)}
