@@ -15,7 +15,7 @@ h1{font-size:clamp(22px,4vw,34px);margin:8px 0;color:#f1d49b}.sub{color:#aeb8c1;
 #message{min-height:24px;color:#f5d28f;padding:10px 2px;font-size:13px}
 .toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .toolbar button{min-height:48px;font-size:12px;padding:8px 5px}.toolbar button.active{outline:3px solid #f6d58d;background:#e2b765}.toolbar button:disabled{opacity:.45;cursor:not-allowed}
-#start,#startDefense{background:#4d9c75;color:#07160e;border-color:#83c9a3}#startDefense{box-shadow:0 4px 16px #0008;cursor:pointer}#startDefense:disabled{opacity:.5;cursor:not-allowed}#restart{background:#596979;color:#fff}
+#start{position:absolute;z-index:5;right:10px;top:10px;min-height:48px;padding:11px 18px;background:#23895b;color:#fff;border:2px solid #b0f1cc;font-size:16px;font-weight:950;box-shadow:0 4px 18px #0009;touch-action:manipulation}#start:disabled{opacity:.5;cursor:not-allowed}#startDefense{background:#4d9c75;color:#07160e;border-color:#83c9a3;box-shadow:0 4px 16px #0008;cursor:pointer}#startDefense:disabled{opacity:.5;cursor:not-allowed}#restart{background:#596979;color:#fff}
 .note{font-size:12px;color:#9eabb6;line-height:1.5;margin:12px 2px}
 .combat-panel{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:#172431;border:1px solid #465968;border-radius:12px;padding:12px;margin:10px 0}
 .move-pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,44px);gap:5px;justify-content:center;touch-action:none}
@@ -49,7 +49,7 @@ onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remov
 <div class="stat">⚔️ Guards <span id="guards">0</span></div>
 <div class="stat">🧑 Warrior HP <span id="playerHp">100</span></div>
 </div>
-<div id="gamebox"><canvas id="view"></canvas><div id="hint">Drag to rotate camera · Pinch/scroll to zoom · Tap a green pad to build</div></div>
+<div id="gamebox"><canvas id="view"></canvas><div id="hint">Drag to rotate camera · Pinch/scroll to zoom · Tap a green pad to build</div><button class="btn" id="start" type="button">⚔️ START WAVE</button></div>
 <div id="message" role="status">Move your warrior with the directional pad. Choose a weapon and attack nearby enemies.</div>
 <section class="combat-panel" aria-label="Warrior combat controls">
 <div class="move-pad" id="movePad">
@@ -67,7 +67,6 @@ onAuthStateChanged(auth,user=>{if(user){document.documentElement.classList.remov
 <button class="btn" id="repair">❤️ Repair · 30</button>
 <button class="btn" id="soldier">🛡️ Deploy Guard · 55</button>
 <button class="btn" id="fire">🎯 Fire Cannon</button>
-<button class="btn" id="start">⚔️ Start Wave</button>
 <button class="btn" id="restart">↻ Restart</button>
 </div>
 <p class="note">Gameplay: Defenses automatically attack enemies approaching the castle. Earn gold by defeating attackers and clearing waves. Build strategically, deploy guards, fire the command cannon, upgrade your castle, and survive all 10 waves. This game saves no cash value; gold is an in-game resource only.</p>
